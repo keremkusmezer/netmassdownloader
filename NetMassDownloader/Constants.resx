@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ArrayMustBeValid" xml:space="preserve">
+    <value>The array muse not be null or of zero length.</value>
+  </data>
+  <data name="DownloadedFileOfFmt" xml:space="preserve">
+    <value>----------------------------------
+FileDownload Result
+----------------------------------
+FileCount : {0}
+FileName  : {1}
+Directory : {2}</value>
+  </data>
+  <data name="DownloadingPdb" xml:space="preserve">
+    <value>Downloading PDB and source files for:{0}{1}</value>
+  </data>
+  <data name="ErrorCacheDirNotExist" xml:space="preserve">
+    <value>The Visual Studio cache directory, '{0}', does not exist.</value>
+  </data>
+  <data name="ErrorDirectoryDoesNotExist" xml:space="preserve">
+    <value>The directory '{0}' does not exist.</value>
+  </data>
+  <data name="ErrorEmptyOutputArg" xml:space="preserve">
+    <value>The -output argument must specify the output directory.</value>
+  </data>
+  <data name="ErrorEmptyVsVerArg" xml:space="preserve">
+    <value>If specified, the -vsver argument cannot be empty.</value>
+  </data>
+  <data name="ErrorFileDoesNotExist" xml:space="preserve">
+    <value>The file '{0}' does not exist.</value>
+  </data>
+  <data name="ErrorMultipleOutputArgs" xml:space="preserve">
+    <value>Only one -output switch can be specified on the command line.</value>
+  </data>
+  <data name="ErrorMultipleVersions" xml:space="preserve">
+    <value>Only one -vsver switch can be specified on the command line.</value>
+  </data>
+  <data name="ErrorNoFiles" xml:space="preserve">
+    <value>No files or directories to process were specified on the command line.</value>
+  </data>
+  <data name="ErrorOutputDoesNotExist" xml:space="preserve">
+    <value>The output directory '{0}' does not exist.</value>
+  </data>
+  <data name="ErrorSwitch" xml:space="preserve">
+    <value>Error on the {0} switch.</value>
+  </data>
+  <data name="ErrorUnknownCommandLineOption" xml:space="preserve">
+    <value>Unknown command line argument.</value>
+  </data>
+  <data name="ErrorVSCacheDirNotExist" xml:space="preserve">
+    <value>The directory in the Visual Studio debugger symbol cache directory, '{0}' does not exist.</value>
+  </data>
+  <data name="ErrorVSNoCacheDirSet" xml:space="preserve">
+    <value>There is no value set for the Visual Studio debugger symbol cache.</value>
+  </data>
+  <data name="ErrorVSNotInstalled" xml:space="preserve">
+    <value>Visual Studio does not appeared to be installed. Unable to read the 
+Debugger key. The default is to look for Visual Studio 2008. If you specified 
+a version with a -vsver command line option, make sure to specify the 
+complete version. For example, Visual Studio 2005 is 8.0 and Visual Studio 
+2008 is 9.0.</value>
+  </data>
+  <data name="FileDownloadFailedFmt" xml:space="preserve">
+    <value>File download failed: {0}</value>
+  </data>
+  <data name="InvalidParameter" xml:space="preserve">
+    <value>An invalid parameter was passed to the method.</value>
+  </data>
+  <data name="LogoString" xml:space="preserve">
+    <value>.Net Mass Downloader {0} - (c) 2008 by Kerem Kusmezer, John Robbins
+</value>
+  </data>
+  <data name="NoDebugSection" xml:space="preserve">
+    <value>File has no .debug section: {0}</value>
+  </data>
+  <data name="NoPdbFileFmt" xml:space="preserve">
+    <value>No matching PDB file on symbol server for {0}</value>
+  </data>
+  <data name="NotEulaFile" xml:space="preserve">
+    <value>You cannot download the files without accepting Microsoft's EULA.</value>
+  </data>
+  <data name="NotOnSymbolServer" xml:space="preserve">
+    <value>File not on symbol server: {0}</value>
+  </data>
+  <data name="NotPEFileFmt" xml:space="preserve">
+    <value>Not a PE file: {0}</value>
+  </data>
+  <data name="PdbAlreadyInSymbolServer" xml:space="preserve">
+    <value>PDB file already in the symbol server cache for:{0}{1}</value>
+  </data>
+  <data name="ProcessingFileFmt" xml:space="preserve">
+    <value>Processing {0}...</value>
+  </data>
+  <data name="RunStatsFmt" xml:space="preserve">
+    <value>
+Processed binaries/PDBs : {0}
+Files not processed     : {1}
+Downloaded source files : {2}</value>
+  </data>
+  <data name="UsageString" xml:space="preserve">
+    <value>Batch download the Microsoft .NET Reference Source code.
+
+Usage: NetMassDownloader [-file &lt;file&gt;] 
+                         [-directory &lt;directory]
+                         [-output &lt;directory&gt;]
+                         [-vsver &lt;version&gt;]
+                         [-force] [-nologo] [-verbose] [-?]
+
+    -file      - Download an individual file's PDB and source code. You can 
+                 specify multiple file parameters. (Short -f).
+    -directory - Download all the found PDB and source code for all files in
+                 the specified directory. You can specify multiple 
+                 directory parameters (Short -d). 
+    -output    - The output directory for PDB and source files. The default
+                 directory is the cache directory set in Visual Studio 2008.
+                 By using the cache directory, you'll have the PDB and source
+                 files available to Visual Studio 2008. However, to use the 
+                 .NET Reference Source Code with VS 2005, use the -output 
+                 switch and in the Options dialog, Debugging, Symbols property 
+                 page, add the specified output directory to the "Symbol file 
+                 (.pdb) locations." Also, add the directory to the Solution 
+                 Properties, Common Properties, Debug Source Files, Directories
+                 containing source code location. The Visual Studio 2005 
+                 debugger will automatically load the source code. (Short -o)
+    -vsver     - The Visual Studio version number to use for finding the cache 
+                 directory. The default is Visual Studio 2008, 
+                 but if you want to use the cache directory for Visual Studio
+                 2005, you would pass '-vsver 8.0' (without quotes) (Short -vs)
+    -force     - If specified, forces the downloading the PDB files into the
+                 symbol server. When downloading to a symbol server if the PDB
+                 exists, it's not downloaded. Using the -output switch will 
+                 always download and process the PDB. (Short -fo)
+    -nologo    - Don't show the logo information. (Short -n)
+    -verbose   - Do verbose output. May be worth turning on as the downloading 
+                 source code can take a long time. (Short -v) 
+    -?         - This help message.</value>
+  </data>
+</root>

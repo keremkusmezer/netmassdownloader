@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{136D6831-3022-4F84-A886-FD8034A7610F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadLibrary", "..\DownloadLibrary\DownloadLibrary.csproj", "{A92A7C28-66AA-4E52-9F91-2B579EDF5CD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMassDownloader", "..\NetMassDownloader\NetMassDownloader.csproj", "{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs05.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ..\\DownloadLibrary\\DownloadLibrary.csproj
+		SccProjectName1 = ../DownloadLibrary
+		SccLocalPath1 = ..\\DownloadLibrary
+		SccProjectUniqueName2 = ..\\NetMassDownloader\\NetMassDownloader.csproj
+		SccProjectName2 = ../NetMassDownloader
+		SccLocalPath2 = ..\\NetMassDownloader
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A92A7C28-66AA-4E52-9F91-2B579EDF5CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A92A7C28-66AA-4E52-9F91-2B579EDF5CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A92A7C28-66AA-4E52-9F91-2B579EDF5CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A92A7C28-66AA-4E52-9F91-2B579EDF5CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
