@@ -155,7 +155,7 @@ namespace NetMassDownloader
                             // If we are not extracting to a symbol server use
                             // the file paths in the PDB so everything works 
                             // with VS 2005.
-                            extract.UseSourceFilePath = 
+                            extract.UseSourceFilePath =
                                                     !argValues.UsingSymbolCache;
 
                             extract.SourceFileDownloaded += new PdbFileExtractor.
@@ -259,8 +259,15 @@ namespace NetMassDownloader
                 {
                     // Delete the GUID directory.
                     Directory.Delete ( finalPdbDirectory );
-                    // Delete the FOO.PDB directory.
-                    Directory.Delete ( parentDir );
+                    // The FOO.PDB directory could already exist from a symbol
+                    // download by a debugger. If the directory is not empty
+                    // skip it.
+                    if ( ( Directory.GetFiles ( parentDir ).Length == 0 ) &&
+                         ( Directory.GetDirectories ( parentDir ).Length == 0 ) )
+                    {
+                        // Delete the FOO.PDB directory.
+                        Directory.Delete ( parentDir );
+                    }
                 }
             }
         }
