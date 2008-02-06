@@ -1,0 +1,3 @@
+C:\fastdownload\redbits\ndp\clr\src\BCL\Microsoft\Win32\SafeHandles\SafeFileMappingHandle.cs
+C:\fastdownload\redbits\ndp\clr\src\BCL\Microsoft\Win32\SafeHandles\SafeFindHandle.cs
+C:\fastdownload\redbits\ndp\clr\src\BCL\Microsoft\Win32\SafeHandles\SafeRegistryHandle.cs

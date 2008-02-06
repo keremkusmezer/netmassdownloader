@@ -1,0 +1,2 @@
+c:\sourcecodes\System.pdb
+c:\sourcecodes\System.Data.pdb

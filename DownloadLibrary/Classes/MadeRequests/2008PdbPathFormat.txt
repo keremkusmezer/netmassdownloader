@@ -1,0 +1,3 @@
+C:\sourcecodes\System.pdb\DFE5894244DC4F3CB4C87F2071A688A51\System.pdb
+C:\sourcecodes\System.Xml.pdb\7D46F35642FE400692A4EC17741F36EC1\System.Xml.pdb
+C:\sourcecodes\System.Drawing.pdb\9A344B0D5384404C87C9E06CC44246C31\System.Drawing.pdb
