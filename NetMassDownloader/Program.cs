@@ -47,6 +47,9 @@ namespace NetMassDownloader
         // The number of source files downloaded.
         private static int numSourceFiles;
 
+        // The flag to indicate I created the directory in the symbol server.
+        private static Boolean createdSymbolDir;
+
         /// <summary>
         /// The entry point to the whole application.
         /// </summary>
@@ -247,15 +250,18 @@ namespace NetMassDownloader
         /// </param>
         static void DeleteSymbolServerDirectory ( String finalPdbDirectory )
         {
-            // I need to delete the directory above the final directory and this
-            // allows me to do that. :)
-            String parentDir = finalPdbDirectory + "..\\";
-            if ( true == Directory.Exists ( finalPdbDirectory ) )
+            if ( true == createdSymbolDir )
             {
-                // Delete the GUID directory.
-                Directory.Delete ( finalPdbDirectory );
-                // Delete the FOO.PDB directory.
-                Directory.Delete ( parentDir );
+                // I need to delete the directory above the final directory and 
+                // this allows me to do that. :)
+                String parentDir = finalPdbDirectory + "..\\";
+                if ( true == Directory.Exists ( finalPdbDirectory ) )
+                {
+                    // Delete the GUID directory.
+                    Directory.Delete ( finalPdbDirectory );
+                    // Delete the FOO.PDB directory.
+                    Directory.Delete ( parentDir );
+                }
             }
         }
 
@@ -285,6 +291,11 @@ namespace NetMassDownloader
             if ( false == Directory.Exists ( currPath ) )
             {
                 Directory.CreateDirectory ( currPath );
+                createdSymbolDir = true;
+            }
+            else
+            {
+                createdSymbolDir = false;
             }
             return ( currPath );
         }
