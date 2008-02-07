@@ -119,7 +119,15 @@ namespace DownloadLibrary.Classes
 
             windowsLocation = windowsLocation + @"\system32\expand.exe";
 
-            System.Diagnostics.ProcessStartInfo tempStart = new System.Diagnostics.ProcessStartInfo(windowsLocation, " -r \"" + sourceFile + "\" " + targetFile + "");
+            
+        
+            //BUGFIX 1118 08.02.2008 Kerem Kusmezer Stupid Me I forgot to put the target directory 
+            //string in "\ "\'s so directories including spaces caused problems.
+            targetFile = System.IO.Path.GetDirectoryName(targetFile);
+            System.Diagnostics.ProcessStartInfo tempStart = 
+                new System.Diagnostics.ProcessStartInfo(windowsLocation,
+                        " -r \"" + sourceFile + "\" \"" + targetFile + "\"");
+
             tempProcess.StartInfo = tempStart;
             tempProcess.StartInfo.UseShellExecute = true;
             tempProcess.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
