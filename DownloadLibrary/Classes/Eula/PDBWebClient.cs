@@ -27,15 +27,15 @@ namespace DownloadLibrary.Classes.Eula
 {
     public class PDBWebClient : System.Net.WebClient
     {
-        private bool m_is201Requested;
+        private bool m_is210Requested;
 
         public bool IsEulaResponse
         {
             get { 
-                return m_is201Requested; 
+                return m_is210Requested; 
             }
             set { 
-                m_is201Requested = value; 
+                m_is210Requested = value; 
             }
         }
 
@@ -78,7 +78,7 @@ namespace DownloadLibrary.Classes.Eula
                 this.Headers.Add("User-Agent", Constants.userAgentHeader);
             }
             byte[] resultBytes = base.DownloadData(url);
-            if (m_is201Requested)
+            if (m_is210Requested)
             {
                 m_eulaBody = System.Text.Encoding.Unicode.GetString(resultBytes);
             }
@@ -100,16 +100,21 @@ namespace DownloadLibrary.Classes.Eula
                 System.Net.HttpWebResponse httpResponse =
                     (System.Net.HttpWebResponse)requestResponse;
                 
-                if (m_is201Requested 
+                if (m_is210Requested 
                     && 
                     httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     Eula.EulaContents.SaveEulaCookie(httpResponse);
                 }
-
-                m_is201Requested = 
-                    (((int)httpResponse.StatusCode) == 210) && (httpResponse.StatusDescription == "End User License Agreement");
-
+                
+                //BUGFIX 1128 08.02.2008 Kerem Kusmezer It seems the Status Description 
+                //Has Been Stripped Or Replaced With Unknown In Some Proxy Servers
+                //Thanks Florin
+                //(() 
+                //&& (httpResponse.StatusDescription == "End User License Agreement");
+                m_is210Requested = ((int)httpResponse.StatusCode == 210);
+                    
+                
                 httpResponse = null;
 
             }
