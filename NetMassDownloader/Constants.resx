@@ -224,6 +224,7 @@ Usage: NetMassDownloader [-file &lt;file&gt;]
                          [-directory &lt;directory]
                          [-output &lt;directory&gt;]
                          [-vsver &lt;version&gt;]
+                         [-proxy server|username|password|domainname]
                          [-force] [-nologo] [-verbose] [-?]
 
     -file      - Download an individual file's PDB and source code. You can 
@@ -253,9 +254,12 @@ Usage: NetMassDownloader [-file &lt;file&gt;]
     -nologo    - Don't show the logo information. (Short -n)
     -verbose   - Do verbose output. May be worth turning on as the downloading 
                  source code can take a long time. (Short -v) 
-    -proxy     - Some proxies need additional credentials. The syntax is "http://testserver:80|username|password|domainname".
-		 See bug id 1133 for more details
-		 (Short -p)
+    -proxy     - Some proxies require credentials in order for the download to
+                 work. The syntax required is 
+                 http://testserver:80|username|password|domainname
+                 For more information about using this flag, see discussion of 
+                 bug 1133 at http://www.codeplex.com/NetMassDownloader for more
+                 details. (Short -p)
     -?         - This help message.</value>
   </data>
 </root>
