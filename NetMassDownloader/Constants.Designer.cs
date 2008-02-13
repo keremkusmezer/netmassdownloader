@@ -341,11 +341,11 @@ namespace NetMassDownloader {
         ///                         [-directory &lt;directory]
         ///                         [-output &lt;directory&gt;]
         ///                         [-vsver &lt;version&gt;]
+        ///                         [-proxy server|username|password|domainname]
         ///                         [-force] [-nologo] [-verbose] [-?]
         ///
         ///    -file      - Download an individual file&apos;s PDB and source code. You can 
-        ///                 specify multiple file parameters. (Short -f).
-        ///    -directory - Download all the found PDB and source code fo [rest of string was truncated]&quot;;.
+        ///                 specify multiple file parameters. (Sho [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string UsageString {
             get {
