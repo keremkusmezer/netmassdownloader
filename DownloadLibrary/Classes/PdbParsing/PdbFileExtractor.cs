@@ -29,6 +29,7 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using DownloadLibrary.Classes.Eula;
+using System.Text.RegularExpressions;
 #endregion
 namespace DownloadLibrary.Classes
 {
@@ -167,6 +168,20 @@ namespace DownloadLibrary.Classes
 
         #region Public Instance Methods
 
+        private Match m_proxyMatch;
+
+        public Match ProxyMatch
+        {
+            private get
+            {
+                return m_proxyMatch;
+            }
+            set
+            {
+                m_proxyMatch = value;
+            }
+        }
+
         public List<SrcSrvDownloadAbleFile> RetrieveNormal(string targetPath)
         {
             String locatedFileIndex = LocateFileIndex();
@@ -195,7 +210,7 @@ namespace DownloadLibrary.Classes
             while (tempEnum.MoveNext())
             {
                 
-                PDBWebClient tempClient = Utility.GetWebClientWithCookie();
+                PDBWebClient tempClient = Utility.GetWebClientWithCookie(this.m_proxyMatch);
                 
                 
 

@@ -41,17 +41,54 @@ namespace DownloadLibrary.Classes.Eula
 
         private string m_eulaBody;
 
+        /// <summary>
+        /// Returns The Eula Body Returned By The MS Reference Server 
+        /// </summary>
         public string EulaBody
         {
             get { return m_eulaBody; }
             private set { m_eulaBody = value; }
         }
-        public PDBWebClient()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="proxyUri"></param>
+        /// <param name="proxyCredential"></param>        
+        public PDBWebClient(System.Uri proxyUri, System.Net.NetworkCredential proxyCredential):base()
         {
-            //if (this.Headers["User-Agent"] == null)
-            //{
-            //    this.Headers.Add("User-Agent", Constants.userAgentHeader);
-            //
+            //BugFix 1113 Kerem Kusmezer 12.02.2008
+            base.Proxy = new System.Net.WebProxy(proxyUri);
+            base.Proxy.Credentials = proxyCredential;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="proxyUrl"></param>
+        /// <param name="proxyUsername"></param>
+        /// <param name="proxyPassword"></param>
+        /// <param name="proxyDomain"></param>
+        public PDBWebClient(string proxyUrl,string proxyUsername,string proxyPassword,string proxyDomain):base()
+        {
+            //BugFix 1113 Kerem Kusmezer 12.02.2008
+            base.Proxy = new System.Net.WebProxy(new System.Uri(proxyUrl));
+            System.Net.NetworkCredential tempCredential = null;
+            if (String.IsNullOrEmpty(proxyDomain))
+            {
+                tempCredential =
+                    new System.Net.NetworkCredential(proxyUsername, proxyPassword);
+            }
+            else
+            {
+                tempCredential = 
+                    new System.Net.NetworkCredential(proxyUsername,proxyPassword,proxyDomain);
+            }
+            base.Proxy.Credentials = tempCredential;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        public PDBWebClient():base()
+        {
         }
 
         public new void DownloadFile(Uri address, string fileName)

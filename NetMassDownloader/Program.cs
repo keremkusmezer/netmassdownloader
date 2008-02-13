@@ -143,7 +143,7 @@ namespace NetMassDownloader
                         Console.WriteLine ( Constants.DownloadingPdb ,
                                             Environment.NewLine ,
                                             file );
-
+                        peFile.ProxyMatch = argValues.ProxyMatch;
                         // Get the PDB file itself from the server.
                         MemoryStream resultStream =
                                   peFile.DownloadPDBFromServer ( finalPdbPath );
@@ -151,7 +151,7 @@ namespace NetMassDownloader
                         {
                             PdbFileExtractor extract =
                                           new PdbFileExtractor ( pdbToProcess );
-
+                            extract.ProxyMatch = argValues.ProxyMatch;
                             // If we are not extracting to a symbol server use
                             // the file paths in the PDB so everything works 
                             // with VS 2005.

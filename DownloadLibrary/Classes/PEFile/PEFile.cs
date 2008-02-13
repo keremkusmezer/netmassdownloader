@@ -28,6 +28,7 @@ using DownloadLibrary.Classes;
 using DownloadLibrary.Classes.Eula;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 #endregion
 
 namespace DownloadLibrary.PEParsing
@@ -119,7 +120,7 @@ namespace DownloadLibrary.PEParsing
                 }
 
                 PDBWebClient pdbDownloader =
-                        Utility.GetWebClientWithCookie();
+                        Utility.GetWebClientWithCookie(this.m_proxyMatch);
 
                 string targetFile = System.IO.Path.GetFileName(m_pdbFileName);
 
@@ -148,6 +149,21 @@ namespace DownloadLibrary.PEParsing
 
             return resultStream;
         }
+        
+        private Match m_proxyMatch;
+        
+        public Match ProxyMatch
+        {
+            private get
+            {
+                return m_proxyMatch;
+            }
+            set
+            {
+                m_proxyMatch = value;
+            }
+        }
+
         /// <summary>
         /// Simple PE Parser, That Extracts The PDB Location From a PE File, which also checks for PE File Validity.
         /// </summary>
