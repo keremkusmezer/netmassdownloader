@@ -37,6 +37,7 @@ using System.Collections.Generic;
 using System.Text;
 using DownloadLibrary.Classes.Eula;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 #endregion
 
 namespace DownloadLibrary.Classes
@@ -124,6 +125,31 @@ namespace DownloadLibrary.Classes
             return byteStorageForSearch.ToString();
         }
 
+        public static PDBWebClient GetWebClientWithCookie(Match ProxyMatch)
+        {
+            
+            PDBWebClient specialWebClient = 
+                (ProxyMatch != null?
+                new PDBWebClient(ProxyMatch.Groups["proxyAddress"].Value,
+                                 ProxyMatch.Groups["username"].Value,
+                                 ProxyMatch.Groups["password"].Value,
+                                 (ProxyMatch.Groups["domain"]!=null?ProxyMatch.Groups["domain"].Value:String.Empty)):new PDBWebClient());
+
+            if (specialWebClient.Headers["User-Agent"] == null)
+            {
+                specialWebClient.Headers.Add("User-Agent", Constants.userAgentHeader);
+            }
+            if (!String.IsNullOrEmpty(EulaContents.GetEulaCookie()))
+            {
+                if (specialWebClient.Headers["Cookie"] == null)
+                {
+                    specialWebClient.Headers.Add("Cookie", EulaContents.GetEulaCookie());
+                }
+            }
+            return specialWebClient;
+        }
+
+        /*
         public static PDBWebClient GetWebClientWithCookie()
         {
             PDBWebClient specialWebClient = new PDBWebClient();
@@ -140,6 +166,7 @@ namespace DownloadLibrary.Classes
             }        
             return specialWebClient;
         }
+        */
 
         public static SearchLocation ExtractFromByteArray(byte[] searchArray,
                                                   string beginHexaDecimalString,

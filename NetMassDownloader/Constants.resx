@@ -208,6 +208,9 @@ complete version. For example, Visual Studio 2005 is 8.0 and Visual Studio
   <data name="ProcessingFileFmt" xml:space="preserve">
     <value>Processing {0}...</value>
   </data>
+  <data name="Proxy" xml:space="preserve">
+    <value>Proxy switch selected , but wrong proxy parameters supplied.</value>
+  </data>
   <data name="RunStatsFmt" xml:space="preserve">
     <value>
 Processed binaries/PDBs : {0}
@@ -250,6 +253,9 @@ Usage: NetMassDownloader [-file &lt;file&gt;]
     -nologo    - Don't show the logo information. (Short -n)
     -verbose   - Do verbose output. May be worth turning on as the downloading 
                  source code can take a long time. (Short -v) 
+    -proxy     - Some proxies need additional credentials. The syntax is "http://testserver:80|username|password|domainname".
+		 See bug id 1133 for more details
+		 (Short -p)
     -?         - This help message.</value>
   </data>
 </root>

@@ -314,6 +314,15 @@ namespace NetMassDownloader {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Proxy switch selected , but wrong proxy parameters supplied..
+        /// </summary>
+        internal static string Proxy {
+            get {
+                return ResourceManager.GetString("Proxy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 
         ///Processed binaries/PDBs : {0}
         ///Files not processed     : {1}

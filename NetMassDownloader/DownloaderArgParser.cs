@@ -1,4 +1,5 @@
-﻿/*------------------------------------------------------------------------------
+﻿#region Detail Information
+/*------------------------------------------------------------------------------
  * SourceCodeDownloader - Kerem Kusmezer (keremskusmezer@gmail.com)
  *                        John Robbins (john@wintellect.com)
  * 
@@ -6,6 +7,8 @@
  * symbol server! No more waiting as each file downloads individually while
  * debugging.
  * ---------------------------------------------------------------------------*/
+#endregion
+
 #region Licence Information
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
@@ -24,6 +27,8 @@
  * limitations under the License.
 */
 #endregion
+
+#region Imported Libraries
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,6 +36,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Globalization;
 using Microsoft.Win32;
+using System.Text.RegularExpressions;
+#endregion
 
 namespace NetMassDownloader
 {
@@ -59,6 +66,24 @@ namespace NetMassDownloader
             set { output = value; }
         }
         private String output;
+
+        private bool useInternalList;
+
+        /// <summary>
+        /// If true, turns on download with pe detection from the internal storage , aka assembly version list.
+        /// </summary>
+        public bool UseInternalList
+        {
+            get
+            {
+                return useInternalList;
+            }
+            set
+            {
+                useInternalList = value;
+            }
+        }
+
 
         /// <summary>
         /// If true, turns off logo display.
@@ -138,6 +163,9 @@ namespace NetMassDownloader
         const String argVerboseShort = "v";
         const String argVsVer = "vsver";
         const String argVsVerShort = "vs";
+        //BugFix 1133 Define Additional Proxy Properties
+        const String argProxy = "proxy";
+        const String argProxyShort = "p";
         #endregion
 
         /// <summary>
@@ -153,7 +181,7 @@ namespace NetMassDownloader
                                      argVerbose ,
                                         argVerboseShort ,
                                      argForce ,
-                                        argForceShort } ,
+                                        argForceShort} ,
                      new String [] { argFile ,
                                         argFileShort ,
                                      argDirectory ,
@@ -161,13 +189,61 @@ namespace NetMassDownloader
                                      argOutput ,
                                         argOutputShort ,
                                      argVsVer ,
-                                        argVsVerShort } )
+                                        argVsVerShort,
+                                    argProxy,
+                                     argProxyShort})
         {
             this.Files = new List<String> ( );
             this.Output = String.Empty;
             this.VsVersion = String.Empty;
 
             errorMessage = String.Empty;
+        }
+
+        private static Regex m_processproxySwitch =
+                    new Regex(@"^""{0,1}(?<proxyAddress>http://[a-zA-Z0-9._]*\:[0-9]{1,5})\|(?<username>[^|]{1,})\|(?<password>[^|]{1,})(\|(?<domain>[^|]*)""{0,1}$|""{0,1}$)", RegexOptions.Singleline 
+                                                                                        | RegexOptions.Compiled);
+        private Match proxyMatch;
+        
+        public Match ProxyMatch
+        {
+            get
+            {
+                return proxyMatch;
+            }
+            private set
+            {
+                proxyMatch = value;
+            }
+        }
+
+        private SwitchStatus ProcessProxySwitch(string switchValue)
+        {
+            
+            SwitchStatus ss = SwitchStatus.NoError;
+
+            if (!String.IsNullOrEmpty(switchValue))
+            {
+                Match proxyMatch =
+                    m_processproxySwitch.Match(switchValue);
+                if (proxyMatch.Success)
+                {
+                    this.proxyMatch = proxyMatch;
+                    ss = SwitchStatus.NoError;
+                }
+                else
+                {
+                    errorMessage = Constants.Proxy;
+                    ss = SwitchStatus.Error;
+                }
+            }
+            else
+            {
+                errorMessage = Constants.Proxy;
+                ss = SwitchStatus.Error;
+            }
+
+            return ss;
         }
 
         /// <summary>
@@ -188,6 +264,12 @@ namespace NetMassDownloader
             SwitchStatus ss = SwitchStatus.NoError;
             switch ( switchSymbol )
             {
+                //BugFix For 1133 Kerem Kusmezer
+                case argProxy:
+                case argProxyShort:
+                    ss =ProcessProxySwitch(switchValue);
+                    break;
+
                 case argHelp:
                 case argHelpQuestion:
                 case argHelpShort:
