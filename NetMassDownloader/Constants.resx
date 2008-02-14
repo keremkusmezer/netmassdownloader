@@ -180,6 +180,9 @@ complete version. For example, Visual Studio 2005 is 8.0 and Visual Studio
   <data name="FileDownloadFailedFmt" xml:space="preserve">
     <value>File download failed: {0}</value>
   </data>
+  <data name="HostNameNotResolved" xml:space="preserve">
+    <value>Hostname Resolve Failed. Please check details:{0}</value>
+  </data>
   <data name="InvalidParameter" xml:space="preserve">
     <value>An invalid parameter was passed to the method.</value>
   </data>
@@ -210,6 +213,9 @@ complete version. For example, Visual Studio 2005 is 8.0 and Visual Studio
   </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy switch selected , but wrong proxy parameters supplied.</value>
+  </data>
+  <data name="ProxyBasedError" xml:space="preserve">
+    <value>During Http Request, A Proxy Based Error Occurred: {0}</value>
   </data>
   <data name="RunStatsFmt" xml:space="preserve">
     <value>
@@ -256,7 +262,8 @@ Usage: NetMassDownloader [-file &lt;file&gt;]
                  source code can take a long time. (Short -v) 
     -proxy     - Some proxies require credentials in order for the download to
                  work. The syntax required is 
-                 http://testserver:80|username|password|domainname
+                 "http://testserver:80|username|password|domainname" or 
+		 "http://testserver:80|username|password"
                  For more information about using this flag, see discussion of 
                  bug 1133 at http://www.codeplex.com/NetMassDownloader for more
                  details. (Short -p)

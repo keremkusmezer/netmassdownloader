@@ -232,6 +232,15 @@ namespace NetMassDownloader {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hostname Resolve Failed. Please check details:{0}.
+        /// </summary>
+        internal static string HostNameNotResolved {
+            get {
+                return ResourceManager.GetString("HostNameNotResolved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An invalid parameter was passed to the method..
         /// </summary>
         internal static string InvalidParameter {
@@ -319,6 +328,15 @@ namespace NetMassDownloader {
         internal static string Proxy {
             get {
                 return ResourceManager.GetString("Proxy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to During Http Request, A Proxy Based Error Occurred: {0}.
+        /// </summary>
+        internal static string ProxyBasedError {
+            get {
+                return ResourceManager.GetString("ProxyBasedError", resourceCulture);
             }
         }
         

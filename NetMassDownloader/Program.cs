@@ -185,7 +185,7 @@ namespace NetMassDownloader
                         }
                     }
                 }
-                catch ( WebException )
+                catch ( WebException webException)
                 {
                     // Couldn't find it on the symbol server.
                     if ( true == argValues.UsingSymbolCache )
@@ -193,7 +193,23 @@ namespace NetMassDownloader
                         DeleteSymbolServerDirectory ( finalPdbPath );
                     }
                     numNotProcessedFiles++;
-                    Console.WriteLine ( Constants.NotOnSymbolServer , file );
+                    if (webException.Status == WebExceptionStatus.ProxyNameResolutionFailure ||
+                        webException.Status == WebExceptionStatus.RequestProhibitedByProxy)
+                    {
+                        Console.WriteLine(Constants.ProxyBasedError, webException.Message);
+                        break;
+                        //throw;
+                    }
+                    else if (webException.Status == WebExceptionStatus.NameResolutionFailure)
+                    {
+                        Console.WriteLine(Constants.HostNameNotResolved, webException.Message);
+                        break;
+                        //throw;
+                    }
+                    else
+                    {
+                        Console.WriteLine(Constants.NotOnSymbolServer, file);
+                    }                    
                 }
                 catch ( FileLoadException )
                 {
