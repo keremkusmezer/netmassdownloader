@@ -202,7 +202,7 @@ namespace NetMassDownloader
 
         private static Regex m_processproxySwitch =
                     new Regex(@"^""{0,1}(?<proxyAddress>http://[a-zA-Z0-9._]*\:[0-9]{1,5})\|(?<username>[^|]{1,})\|(?<password>[^|]{1,})(\|(?<domain>[^|]*)""{0,1}$|""{0,1}$)", RegexOptions.Singleline 
-                                                                                        | RegexOptions.Compiled);
+                                                                                        | RegexOptions.Compiled |RegexOptions.IgnoreCase|RegexOptions.CultureInvariant);
         private Match proxyMatch;
         
         public Match ProxyMatch
