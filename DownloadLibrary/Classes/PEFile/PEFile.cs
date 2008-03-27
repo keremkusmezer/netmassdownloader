@@ -134,7 +134,7 @@ namespace DownloadLibrary.PEParsing
 
                 pdbDownloader.DownloadFile(targetFile, compressedFileName);
 
-                if (Decompressor.ExpandSourceFileToTarget(compressedFileName, targetPath))
+                if (Decompressor.ExpandSourceFileToTarget(compressedFileName, targetPath, PdbFileName))
                 {
                     resultStream = new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine(targetPath, PdbFileName)));
                 }
