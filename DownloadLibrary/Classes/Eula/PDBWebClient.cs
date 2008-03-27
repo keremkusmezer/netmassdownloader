@@ -125,7 +125,6 @@ namespace DownloadLibrary.Classes.Eula
         {
             System.Net.WebRequest tempRequest =
                 base.GetWebRequest(address);
-            //tempRequest.Timeout = 5 * 60 * 1000;
             return tempRequest;
         }
         protected override System.Net.WebResponse GetWebResponse(System.Net.WebRequest request)
