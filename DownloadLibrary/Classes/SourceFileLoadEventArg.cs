@@ -76,7 +76,8 @@ namespace DownloadLibrary.Classes
         {
             if (m_occurredException != null)
             {
-                return String.Format("{0} {1} {2}", FileName, FileUrl,m_occurredException.Message);
+                //return String.Format("{0} {1} {2}", FileName, FileUrl,m_occurredException.Message);
+                return string.Format( "{0}{0}{1}", "    ", m_occurredException.Message );
             }
             else
             {

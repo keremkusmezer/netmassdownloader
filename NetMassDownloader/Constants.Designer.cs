@@ -84,7 +84,7 @@ namespace NetMassDownloader {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Downloading PDB and source files for:{0}{1}.
+        ///   Looks up a localized string similar to Downloading {0} .
         /// </summary>
         internal static string DownloadingPdb {
             get {
@@ -260,7 +260,7 @@ namespace NetMassDownloader {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File has no .debug section: {0}.
+        ///   Looks up a localized string similar to File has no .debug section:{0}{1}{2}{0}.
         /// </summary>
         internal static string NoDebugSection {
             get {
@@ -319,6 +319,15 @@ namespace NetMassDownloader {
         internal static string ProcessingFileFmt {
             get {
                 return ResourceManager.GetString("ProcessingFileFmt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing {0} ....
+        /// </summary>
+        internal static string ProcessingPdb {
+            get {
+                return ResourceManager.GetString("ProcessingPdb", resourceCulture);
             }
         }
         

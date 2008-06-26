@@ -30,6 +30,7 @@
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     <DocumentationFile>..\Debug\NetMassDownloader.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,12 +45,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppPdbFileExtractor.cs" />
+    <Compile Include="AppPEFile.cs" />
+    <Compile Include="AppSettings.cs" />
+    <Compile Include="ConsoleWebClient.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ArgParser.cs" />
     <Compile Include="Constants.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -88,6 +96,7 @@
     <Content Include="ParameterSamples.txt" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="SourceDownloader.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
