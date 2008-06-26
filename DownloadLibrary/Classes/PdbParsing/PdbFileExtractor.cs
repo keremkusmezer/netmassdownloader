@@ -33,6 +33,7 @@ using System.Text.RegularExpressions;
 #endregion
 namespace DownloadLibrary.Classes
 {
+    [CLSCompliant(true)]
     public class PdbFileExtractor
     {
 
@@ -70,6 +71,21 @@ namespace DownloadLibrary.Classes
         }
 
 
+        //{{HDN==================================================
+        private bool _skipExistingSourceFiles;
+        public bool SkipExistingSourceFiles {
+            get { return _skipExistingSourceFiles; }
+            set { _skipExistingSourceFiles = value; }
+        }
+
+        protected virtual PDBWebClient GetWebClientWithCookie() {
+            return Utility.GetWebClientWithCookie( this.m_proxyMatch );
+        }
+
+        protected virtual void OnBeginDownloadSourceFile( object sender, DownloadFileEventArgs args ) {}
+        protected virtual void OnDownloadSourceFileAfterEulaAccepted(
+            object sender, DownloadFileEventArgs args ) {}
+        //}}HDN==================================================
 
         #endregion
 
@@ -172,7 +188,7 @@ namespace DownloadLibrary.Classes
 
         public Match ProxyMatch
         {
-            private get
+            protected get 
             {
                 return m_proxyMatch;
             }
@@ -210,8 +226,7 @@ namespace DownloadLibrary.Classes
             while (tempEnum.MoveNext())
             {
                 
-                PDBWebClient tempClient = Utility.GetWebClientWithCookie(this.m_proxyMatch);
-                
+                PDBWebClient tempClient = GetWebClientWithCookie();
                 
 
                 string directoryName = String.Empty;
@@ -233,8 +248,25 @@ namespace DownloadLibrary.Classes
                         Directory.CreateDirectory(directoryName);
                     }
 
-                    byte[] downloadedData =
-                           tempClient.DownloadData(tempEnum.Current.UrlToBeRequested);
+                    //{{HDN==================================================
+                    DownloadFileEventArgs args = new DownloadFileEventArgs();
+                    args.TargetFilePath = UseSourceFilePath
+                        ? tempEnum.Current.LocalFileTargetAlternative : tempEnum.Current.LocalFileTarget;
+                    if (_skipExistingSourceFiles) {
+                        if (File.Exists(args.TargetFilePath)) {
+                            continue;
+                        }
+                    }
+
+                    OnBeginDownloadSourceFile( this, args );
+
+                    byte[] downloadedData = new byte[] {};
+                    bool downloadOk = tempClient.DownloadDataWithProgress(
+                        tempEnum.Current.UrlToBeRequested, out downloadedData );
+                    if (! downloadOk) {
+                        continue;
+                    }
+                    //}}HDN==================================================
 
                     EulaRequestEvent eulaEventArg = null;
 
@@ -252,8 +284,15 @@ namespace DownloadLibrary.Classes
                         }
                         else
                         {
-                            downloadedData =
-                                tempClient.DownloadData(tempEnum.Current.UrlToBeRequested + "?" + eulaEventArg.EulaContent.AcceptCmdKey);
+                            //{{HDN==================================================
+                            OnDownloadSourceFileAfterEulaAccepted( this, args );
+                            
+                            downloadOk = tempClient.DownloadDataWithProgress(
+                                tempEnum.Current.UrlToBeRequested + "?" + eulaEventArg.EulaContent.AcceptCmdKey, out downloadedData );
+                            if (! downloadOk) {
+                                continue;
+                            }
+                            //}}HDN==================================================
                         }
 
                     }
@@ -262,11 +301,17 @@ namespace DownloadLibrary.Classes
                     {
                         System.IO.File.WriteAllBytes(tempEnum.Current.LocalFileTargetAlternative,
                                                      downloadedData);
+                        if (tempClient.HasLastFileWriteTimeOnServer) {
+                            File.SetLastAccessTimeUtc( tempEnum.Current.LocalFileTargetAlternative, tempClient.LastFileWriteTimeOnServer );
+                        }
                     }
                     else
                     {
                         System.IO.File.WriteAllBytes(tempEnum.Current.LocalFileTarget,
                              downloadedData);
+                        if (tempClient.HasLastFileWriteTimeOnServer) {
+                            File.SetLastAccessTimeUtc( tempEnum.Current.LocalFileTarget, tempClient.LastFileWriteTimeOnServer );
+                        }
                     }
                     OnSourceFileDownloaded(new SourceFileLoadEventArg((UseSourceFilePath?tempEnum.Current.LocalFileTargetAlternative:tempEnum.Current.LocalFileTarget), tempEnum.Current.UrlToBeRequested, i.ToString() + "/" + pdbResults.Count));
                 }
@@ -466,4 +511,28 @@ namespace DownloadLibrary.Classes
         #endregion
 
     }
+
+    #region Class: DownloadFileEventArgs
+    [CLSCompliant(true)]
+    public class DownloadFileEventArgs : EventArgs {
+        private string _targetFilePath;
+        private string _targetFileName;
+
+        public string TargetFilePath {
+            get { return _targetFilePath; }
+            set {
+                _targetFilePath = value;
+
+                _targetFileName = null;
+                if (_targetFilePath != null) {
+                    _targetFileName = Path.GetFileName( _targetFilePath );
+                }
+            }
+        }
+
+        public string TargetFileName {
+            get { return _targetFileName; }
+        }
+    }
+    #endregion Class: DownloadFileEventArgs
 }

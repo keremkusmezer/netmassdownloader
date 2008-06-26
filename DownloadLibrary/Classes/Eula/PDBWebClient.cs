@@ -21,10 +21,16 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
 using System.Text;
+using System.Threading;
 
 namespace DownloadLibrary.Classes.Eula
 {
+    [CLSCompliant(true)]
     public class PDBWebClient : System.Net.WebClient
     {
         private bool m_is210Requested;
@@ -131,15 +137,111 @@ namespace DownloadLibrary.Classes.Eula
         {            
             System.Net.WebResponse requestResponse = 
             base.GetWebResponse(request);
-            if (requestResponse is System.Net.HttpWebResponse)
+            
+            this.CheckResponse( requestResponse );
+            return requestResponse;
+        }
+
+
+
+        #region [HDN] Additional Code
+        #region Instance Properties
+        private readonly object _syncRoot = new object();
+        protected object SyncRoot {
+            get {
+                return _syncRoot;
+            }
+        }
+
+        private DateTime _lastFileWriteTimeOnServer;
+        public DateTime LastFileWriteTimeOnServer {
+            get { return _lastFileWriteTimeOnServer; }
+        }
+
+        private bool _hasLastFileWriteTimeOnServer = false;
+        public bool HasLastFileWriteTimeOnServer {
+            get { return _hasLastFileWriteTimeOnServer; }
+        }
+        #endregion Instance Properties
+
+        #region Instance Methods
+        #region Public
+        public bool DownloadDataWithProgress( string url, out byte[] downloadData ) {
+            downloadData = new byte[] {};
+
+            Utility.AddUserAgentHeaderIfNecessary( this );
+
+            DownloadInfo di = new DownloadInfo();
+            base.DownloadDataAsync( new Uri(url), di );
+
+            WaitUntilDownloadCompleted( di );
+            bool ok = di.Successful;
+
+            if (ok) {
+                downloadData = (byte[]) di.Result;
+                if (m_is210Requested) {
+                    m_eulaBody = System.Text.Encoding.Unicode.GetString(downloadData);
+                }
+            }
+            return ok;
+        }
+
+        public bool DownloadFileWithProgress(string address, string fileName) {
+            Utility.AddUserAgentHeaderIfNecessary( this );
+
+            DownloadInfo di = new DownloadInfo();
+            base.DownloadFileAsync(new Uri(address), fileName, di);
+
+            WaitUntilDownloadCompleted( di );
+
+            if (di.Successful) {
+                if (_hasLastFileWriteTimeOnServer) {
+                    File.SetLastAccessTimeUtc( fileName, _lastFileWriteTimeOnServer );
+                }
+            }
+
+            return di.Successful;
+        }
+        #endregion Public
+
+        #region Overrides
+        protected override WebResponse GetWebResponse( WebRequest request, IAsyncResult result ) {
+            WebResponse response = base.GetWebResponse( request, result );
+            this.CheckResponse( response );
+            return response;
+        }
+        #endregion Overrides
+
+        #region Helpers
+        private void WaitUntilDownloadCompleted( DownloadInfo di ) {
+            while (true) {
+                object result = null;
+                lock( _syncRoot ) {
+                    result = di.Result;
+                }
+
+                if (result != null) {
+                    break;
+                }
+
+                Thread.Sleep( 500 );
+            } // while
+        }
+
+        private void CheckResponse( WebResponse requestResponse ) {
+            _hasLastFileWriteTimeOnServer = false;
+
+            string str = requestResponse.Headers["Last-Modified"];
+            if (!string.IsNullOrEmpty( str )) {
+                _lastFileWriteTimeOnServer = DateTime.Parse( str );
+                _hasLastFileWriteTimeOnServer = true;
+            }
+
+            if (requestResponse is HttpWebResponse)
             {
-                System.Net.HttpWebResponse httpResponse =
-                    (System.Net.HttpWebResponse)requestResponse;
+                HttpWebResponse httpResponse = (HttpWebResponse)requestResponse;
                 
-                if (m_is210Requested 
-                    && 
-                    httpResponse.StatusCode == System.Net.HttpStatusCode.OK)
-                {
+                if (m_is210Requested && (httpResponse.StatusCode == HttpStatusCode.OK)) {
                     Eula.EulaContents.SaveEulaCookie(httpResponse);
                 }
                 
@@ -154,7 +256,54 @@ namespace DownloadLibrary.Classes.Eula
                 httpResponse = null;
 
             }
-            return requestResponse;
+        }
+        #endregion
+        #endregion Instance Methods
+        #endregion [HDN] Additional Code
+
+    }
+
+    #region Class: DownloadInfo
+    public class DownloadInfo {
+        private object _result = null;
+        private bool _firstTime = true;
+        private bool _printedTotal = false;
+        private string _lastToken = null;
+
+        private bool _hasProgress = false;
+        private bool _progressDone = false;
+
+        public object Result {
+            get { return _result; }
+            set { _result = value; }
+        }
+        public bool Successful {
+            get { return (!(_result is Exception)); }
+        }
+
+        public bool FirstTime {
+            get { return _firstTime; }
+            set { _firstTime = value; }
+        }
+
+        public bool PrintedTotal {
+            get { return _printedTotal; }
+            set { _printedTotal = value; }
+        }
+
+        public string LastToken {
+            get { return _lastToken; }
+            set { _lastToken = value; }
+        }
+
+        public bool HasProgress {
+            get { return _hasProgress; }
+            set { _hasProgress = value; }
+        }
+        public bool ProgressDone {
+            get { return _progressDone; }
+            set { _progressDone = value; }
         }
     }
+    #endregion Class : DownloadInfo
 }

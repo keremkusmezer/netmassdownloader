@@ -66,6 +66,7 @@
     <Compile Include="Classes\PEFile\Helpers\IMAGE_DOS_HEADER.cs" />
     <Compile Include="Classes\PEFile\Helpers\IMAGE_NT_HEADERS.cs" />
     <Compile Include="Classes\PEFile\PEFile.cs" />
+    <Compile Include="Classes\SerializableItem.cs" />
     <Compile Include="Classes\SourceFileLoadEventArg.cs" />
     <Compile Include="Classes\Eula\PDBWebClient.cs">
       <SubType>Component</SubType>

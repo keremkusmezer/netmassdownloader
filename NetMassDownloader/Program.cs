@@ -26,6 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.IO;
 using DownloadLibrary.Classes;
@@ -101,13 +102,23 @@ namespace NetMassDownloader
 
         static void ProcessFiles ( )
         {
+            XmlPEFileList xmlPEFileList = new XmlPEFileList();
+
             foreach ( String file in argValues.Files )
             {
                 // Build up the output path.
                 String finalPdbPath = argValues.Output;
                 try
                 {
-                    PEFile peFile = new PEFile ( file );
+                    PEFile peFile = new AppPEFile( file );
+                    xmlPEFileList.Items.Add( new XmlPEFileItem(peFile) );
+
+                    if (! AppSettings.DownloadSymbols) {
+                        continue;
+                    }
+
+                    peFile.CleanupTempCompressedSymbols = AppSettings.CleanupTempCompressedSymbols;
+                    peFile.SymbolServerUrl = AppSettings.SymbolServerUrl;
 
                     Boolean doTheDownload = true;
                     if ( true == argValues.UsingSymbolCache )
@@ -119,6 +130,7 @@ namespace NetMassDownloader
 
                     // The final pdb file.
                     String pdbToProcess = finalPdbPath + peFile.PdbFileName;
+                    bool pdbFileAlreadyExists = File.Exists( pdbToProcess );
 
                     // We're downloading to a symbol server and not forcing, 
                     // look to see if the file already exists. If it does, skip 
@@ -126,31 +138,41 @@ namespace NetMassDownloader
                     if ( ( true == argValues.UsingSymbolCache ) &&
                          ( false == argValues.Force ) )
                     {
-                        Boolean exists = File.Exists ( pdbToProcess );
-                        if ( true == exists )
+                        if (pdbFileAlreadyExists)
                         {
-                            numNotProcessedFiles++;
-                            doTheDownload = false;
-                            Console.WriteLine (
-                                        Constants.PdbAlreadyInSymbolServer ,
-                                        Environment.NewLine ,
-                                        file );
+                            if (! AppSettings.DownloadSourceCode) {
+                                numNotProcessedFiles++;
+                                doTheDownload = false;
+                                //Console.WriteLine (
+                                            //Constants.PdbAlreadyInSymbolServer ,
+                                            //Environment.NewLine ,
+                                            //file );
+                            }
                         }
                     }
 
                     if ( true == doTheDownload )
                     {
-                        Console.WriteLine ( Constants.DownloadingPdb ,
-                                            Environment.NewLine ,
-                                            file );
+                        if (! pdbFileAlreadyExists) {
+                            Console.Write( Constants.DownloadingPdb, peFile.PdbFileName );
+                        }
+                        else {
+                            Console.WriteLine( Constants.ProcessingPdb, peFile.PdbFileName );
+                        }
+
                         peFile.ProxyMatch = argValues.ProxyMatch;
+
                         // Get the PDB file itself from the server.
-                        MemoryStream resultStream =
-                                  peFile.DownloadPDBFromServer ( finalPdbPath );
-                        if ( null != resultStream )
+                        bool downloadPdbFileOk = true;
+                        if (! pdbFileAlreadyExists) {
+                            downloadPdbFileOk = peFile.DownloadPDBFromServer( finalPdbPath );
+                        }
+
+                        //if ( null != resultStream )
+                        if (downloadPdbFileOk && AppSettings.DownloadSourceCode)
                         {
-                            PdbFileExtractor extract =
-                                          new PdbFileExtractor ( pdbToProcess );
+                            PdbFileExtractor extract = new AppPdbFileExtractor( pdbToProcess );
+                            extract.SkipExistingSourceFiles = AppSettings.SkipExistingSourceFiles;
                             extract.ProxyMatch = argValues.ProxyMatch;
                             // If we are not extracting to a symbol server use
                             // the file paths in the PDB so everything works 
@@ -177,11 +199,13 @@ namespace NetMassDownloader
                             extract.DownloadWholeFiles ( finalSrcPath );
                             numProcessFiles++;
 
+                            Console.WriteLine();
                         }
                         else
                         {
-                            numNotProcessedFiles++;
-                            Console.WriteLine ( Constants.NoPdbFileFmt , file );
+                            if (! downloadPdbFileOk) {
+                                numNotProcessedFiles++;
+                            }
                         }
                     }
                 }
@@ -224,10 +248,21 @@ namespace NetMassDownloader
                 catch ( NoDebugSectionException )
                 {
                     // There is not a .debug section in the PE file.
-                    Console.WriteLine ( Constants.NoDebugSection , file );
+                    Console.WriteLine( Constants.NoDebugSection, Environment.NewLine, AppSettings.Indent, file );
                     numNotProcessedFiles++;
                 }
             }
+
+            //{{HDN==================================================
+            if (xmlPEFileList.Items.Count > 0) {
+                string peSymbolListFilePath = argValues.Output + "PESymbolList.xml";
+
+                if (File.Exists( peSymbolListFilePath )) {
+                    File.Delete( peSymbolListFilePath );
+                }
+                File.WriteAllText( peSymbolListFilePath, xmlPEFileList.Serialize(), Encoding.UTF8 );
+            }
+            //}}HDN==================================================
         }
 
         static void EulaAcceptRequested ( object sender , EulaRequestEvent e )
@@ -242,8 +277,7 @@ namespace NetMassDownloader
         {
             if ( null != e.OccurredException )
             {
-                Console.WriteLine ( Constants.FileDownloadFailedFmt ,
-                                    e.ToString ( ) );
+                Console.WriteLine( e.ToString() );
             }
             else
             {

@@ -451,10 +451,13 @@ namespace NetMassDownloader
             }
             else
             {
+                SearchOption so = AppSettings.ProcessInputDirRecursively ?
+                    SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
                 // Get all the DLLs and EXEs.
-                String [] dirFiles = Directory.GetFiles ( directory , "*.EXE" );
+                String [] dirFiles = Directory.GetFiles ( directory , "*.DLL", so );
                 Files.AddRange ( dirFiles );
-                dirFiles = Directory.GetFiles ( directory , "*.DLL" );
+                dirFiles = Directory.GetFiles ( directory , "*.EXE", so );
                 Files.AddRange ( dirFiles );
             }
             return ( retValue );

@@ -23,7 +23,10 @@
 #endregion
 #region Imported Libraries
 using System;
+using System.Collections;
+using System.Diagnostics;
 using System.IO;
+using System.Xml.Serialization;
 using DownloadLibrary.Classes;
 using DownloadLibrary.Classes.Eula;
 using System.Runtime.InteropServices;
@@ -33,6 +36,7 @@ using System.Text.RegularExpressions;
 
 namespace DownloadLibrary.PEParsing
 {
+    [CLSCompliant(true)]
     public class PEFile
     {
         // Private members to track information at runtime
@@ -48,9 +52,8 @@ namespace DownloadLibrary.PEParsing
         // PE file magic number
         const uint PEMAGIC = 0x00004550;
 
-        private MemoryStream m_pdbStream;
         private string m_pdbVersion;
-        private string m_pdbFileName;
+        private string m_pdbFullName;
         private Guid m_pdbGuid;
         private string m_pdbAge;
 
@@ -82,11 +85,12 @@ namespace DownloadLibrary.PEParsing
         {
             get
             {
-                return m_pdbFileName;
+                return m_pdbFullName;
             }
         }
 
 
+        private string _pdbFileName;
         /// <summary>
         /// Pdb FileName Which Will Be Used To Download The File
         /// </summary>
@@ -94,9 +98,42 @@ namespace DownloadLibrary.PEParsing
         {
             get
             {
-                return System.IO.Path.GetFileName(m_pdbFileName);
+                if (_pdbFileName == null) {
+                    _pdbFileName = Path.GetFileName( m_pdbFullName );
+                }
+                return _pdbFileName;
             }
         }
+
+        //{{HDN==================================================
+        private FileInfo _fileInfo;
+        public FileInfo FileInfo {
+            get { return _fileInfo; }
+        }
+
+        private FileVersionInfo _fileVersionInfo;
+        public FileVersionInfo FileVersionInfo {
+            get { return _fileVersionInfo; }
+        }
+
+        private bool _cleanupTempCompressedSymbols;
+        public bool CleanupTempCompressedSymbols {
+            get { return _cleanupTempCompressedSymbols; }
+            set { _cleanupTempCompressedSymbols = value; }
+        }
+
+
+        private string _symbolServerUrl;
+        public string SymbolServerUrl {
+            get { return _symbolServerUrl; }
+            set { _symbolServerUrl = value; }
+        }
+
+
+        protected virtual PDBWebClient GetWebClientWithCookie() {
+            return Utility.GetWebClientWithCookie( this.m_proxyMatch );
+        }
+        //}}HDN==================================================
 
 
         /// <summary>
@@ -104,10 +141,9 @@ namespace DownloadLibrary.PEParsing
         /// </summary>
         /// <param name="targetPath">Location To Save The PDB Found.</param>
         /// <returns></returns>
-        public MemoryStream DownloadPDBFromServer(string targetPath)
+        public bool DownloadPDBFromServer(string targetPath)
         {
-
-            MemoryStream resultStream = null;
+            bool allOk = false;
 
             try
             {
@@ -119,24 +155,27 @@ namespace DownloadLibrary.PEParsing
                     System.IO.Directory.CreateDirectory(targetPath);
                 }
 
-                PDBWebClient pdbDownloader =
-                        Utility.GetWebClientWithCookie(this.m_proxyMatch);
+                PDBWebClient pdbDownloader = GetWebClientWithCookie();
 
-                string targetFile = System.IO.Path.GetFileName(m_pdbFileName);
+                string targetFile = this.PdbFileName;
 
-                targetFile =
-                    String.Format("{0}{1}/{2}/{3}", Constants.symbolsLocation, targetFile, this.PdbVersion, targetFile.Replace(".pdb", ".pd_"));
+                targetFile = String.Format("{0}{1}/{2}/{3}",
+                    this.SymbolServerUrl, targetFile, this.PdbVersion, targetFile.Replace(".pdb", ".pd_"));
 
-                string compressedFileName =
-                    System.IO.Path.GetTempFileName();
+                string compressedFileName = targetPath + this.PdbFileName.Replace(".pdb", ".pd_");
 
                 System.Diagnostics.Debug.WriteLine("Pdb Location For Retrieval:" + targetFile);
 
-                pdbDownloader.DownloadFile(targetFile, compressedFileName);
-
-                if (Decompressor.ExpandSourceFileToTarget(compressedFileName, targetPath, PdbFileName))
-                {
-                    resultStream = new MemoryStream(System.IO.File.ReadAllBytes(Path.Combine(targetPath, PdbFileName)));
+                if (pdbDownloader.DownloadFileWithProgress(targetFile, compressedFileName)) {
+                    if (Decompressor.ExpandSourceFileToTarget(compressedFileName, targetPath))
+                    {
+                        allOk = true;
+                    }
+                }
+                if (this.CleanupTempCompressedSymbols) {
+                    if (File.Exists( compressedFileName )) {
+                        File.Delete( compressedFileName );
+                    }
                 }
             }
             catch (Exception ex)
@@ -145,16 +184,14 @@ namespace DownloadLibrary.PEParsing
                 throw;
             }
 
-            m_pdbStream = resultStream;
-
-            return resultStream;
+            return allOk;
         }
         
         private Match m_proxyMatch;
         
         public Match ProxyMatch
         {
-            private get
+            protected get
             {
                 return m_proxyMatch;
             }
@@ -177,6 +214,15 @@ namespace DownloadLibrary.PEParsing
 
             if (!peContainer.Exists)
                 throw new FileNotFoundException(path);
+
+            _fileInfo = peContainer;
+            try {
+                _fileVersionInfo = FileVersionInfo.GetVersionInfo(path);
+            }
+            catch( Exception exc ) {
+                Debug.WriteLine( exc.ToString() );
+                _fileVersionInfo = null;
+            }
 
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
@@ -425,7 +471,7 @@ namespace DownloadLibrary.PEParsing
                                             
                                             // Buildup The String And Return It. 
                                             // We assume always that it is ascii encoded.
-                                            m_pdbFileName = Encoding.ASCII.GetString(stringHolder.ToArray());//resultBuilder.ToString();
+                                            m_pdbFullName = Encoding.ASCII.GetString(stringHolder.ToArray());//resultBuilder.ToString();
 
                                             
                                             return;
@@ -595,9 +641,119 @@ namespace DownloadLibrary.PEParsing
                 finalHex = Utility.ByteArrayToHex(finalGuid) + (finalHex.StartsWith("0") ? finalHex.Substring(1, 1) : finalHex);
                 m_pdbVersion = finalHex.ToUpperInvariant();
 
-                m_pdbFileName = pdbFileName;
+                m_pdbFullName = pdbFileName;
 
             }
         }
     }
+
+
+    #region [HDN] Xml Serialization
+    [XmlRoot("PEFile")]
+    public class XmlPEFileItem : SerializableItem {
+
+        public XmlPEFileItem() {}
+        public XmlPEFileItem( PEFile peFile ) {
+            FileInfo fi = peFile.FileInfo;
+            _fileName = fi.Name;
+            _size = fi.Length.ToString();
+            _lastWriteTimeUtc = fi.LastWriteTimeUtc.ToString();
+
+            FileVersionInfo vi = peFile.FileVersionInfo;
+            if (vi != null) {
+                _description = vi.FileDescription;
+                _version = vi.FileVersion;
+            }
+
+            _pdbFileName = peFile.PdbFileName;
+            _pdbGuid = peFile.PdbGuid.ToString();
+            _pdbVersion = peFile.PdbVersion;
+            _pdbAge = peFile.PdbAge;
+        }
+
+        #region ///// PE /////  
+        private string _fileName;
+        private string _description;
+        private string _version;
+        private string _size;
+        private string _lastWriteTimeUtc;
+
+        [XmlElement("FileName")]
+        public string FileName {
+            get { return _fileName; }
+            set { _fileName = value; }
+        }
+
+        [XmlElement("Description")]
+        public string Description {
+            get { return _description; }
+            set { _description = value; }
+        }
+
+        [XmlElement("Version")]
+        public string Version {
+            get { return _version; }
+            set { _version = value; }
+        }
+
+        [XmlElement("Size")]
+        public string Size {
+            get { return _size; }
+            set { _size = value; }
+        }
+
+        [XmlElement("LastWriteTimeUtc")]
+        public string LastWriteTimeUtc {
+            get { return _lastWriteTimeUtc; }
+            set { _lastWriteTimeUtc = value; }
+        }
+        #endregion
+
+        #region ///// PDB /////
+        private string _pdbFileName;
+        private string _pdbGuid;
+        private string _pdbVersion;
+        private string _pdbAge;
+
+        [XmlElement("PdbFileName")]
+        public string PdbFileName {
+            get { return _pdbFileName; }
+            set { _pdbFileName = value; }
+        }
+
+        [XmlElement("PdbGuid")]
+        public string PdbGuid {
+            get { return _pdbGuid; }
+            set { _pdbGuid = value; }
+        }
+
+        [XmlElement("PdbVersion")]
+        public string PdbVersion {
+            get { return _pdbVersion; }
+            set { _pdbVersion = value; }
+        }
+
+        [XmlElement("PdbAge")]
+        public string PdbAge {
+            get { return _pdbAge; }
+            set { _pdbAge = value; }
+        }
+        #endregion
+    }
+
+    [XmlRoot("List")]
+    public class XmlPEFileList : SerializableItem {
+        private ArrayList _items;
+
+        public XmlPEFileList() {
+            _items = new ArrayList();
+        }
+
+        [XmlElement("PEFile", typeof(XmlPEFileItem))]
+        public ArrayList Items {
+            get { return _items; }
+            set { _items = value; }
+        }
+    }
+    #endregion
 }

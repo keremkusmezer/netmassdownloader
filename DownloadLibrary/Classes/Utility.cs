@@ -34,6 +34,8 @@
 #region Imported Libraries
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Text;
 using DownloadLibrary.Classes.Eula;
 using System.Runtime.InteropServices;
@@ -135,17 +137,7 @@ namespace DownloadLibrary.Classes
                                  ProxyMatch.Groups["password"].Value,
                                  (ProxyMatch.Groups["domain"]!=null?ProxyMatch.Groups["domain"].Value:String.Empty)):new PDBWebClient());
 
-            if (specialWebClient.Headers["User-Agent"] == null)
-            {
-                specialWebClient.Headers.Add("User-Agent", Constants.userAgentHeader);
-            }
-            if (!String.IsNullOrEmpty(EulaContents.GetEulaCookie()))
-            {
-                if (specialWebClient.Headers["Cookie"] == null)
-                {
-                    specialWebClient.Headers.Add("Cookie", EulaContents.GetEulaCookie());
-                }
-            }
+            AddHeadersIfNecessary( specialWebClient );
             return specialWebClient;
         }
 
@@ -267,6 +259,61 @@ namespace DownloadLibrary.Classes
                 bytes[i / 2] = Convert.ToByte(HexString.Substring(i, 2), 16);
             }
             return bytes;
+        }
+
+        public static void AddHeadersIfNecessary( WebClient wc ) {
+            AddUserAgentHeaderIfNecessary( wc );
+            AddEulaCookieHeaderIfNecessary( wc );
+        }
+
+        public static void AddUserAgentHeaderIfNecessary( WebClient wc ) {
+            const string header = "User-Agent";
+            if (wc.Headers[header] == null) {
+                wc.Headers.Add(header, Constants.userAgentHeader);
+            }
+        }
+        public static void AddEulaCookieHeaderIfNecessary( WebClient wc ) {
+            const string header = "Cookie";
+            if (wc.Headers[header] == null) {
+                wc.Headers.Add(header, EulaContents.GetEulaCookie());
+            }            
+        }
+
+        public static string GetProxyAddressFrom( Match m ) {
+            return GetMatchGroupValue( m, "proxyAddress" );
+        }
+        public static string GetUserNameFrom( Match m ) {
+            return GetMatchGroupValue( m, "username" );
+        }
+        public static string GetPasswordFrom( Match m ) {
+            return GetMatchGroupValue( m, "password" );
+        }
+        public static string GetDomainFrom( Match m ) {
+            return GetMatchGroupValue( m, "domain" );
+        }
+        private static string GetMatchGroupValue( Match m, string groupName ) {
+            Group g = m.Groups["groupName"];
+            return (g != null) ? g.Value : string.Empty;            
+        }
+
+
+        public static void EnsureDir( string path ) {
+            if (! Directory.Exists( path )) {
+                Directory.CreateDirectory( path );
+            }
+        }
+        public static void EnsureParentDir( string path ) {
+            string parentDirPath = Path.GetDirectoryName( path );
+            if (! Directory.Exists( parentDirPath )) {
+                Directory.CreateDirectory( parentDirPath );
+            }
+        }
+        public static bool MoveFileIfExists( string srcPath, string targetPath ) {
+            bool exists = File.Exists( srcPath );
+            if (exists) {
+                File.Move( srcPath, targetPath );
+            }
+            return exists;
         }
     }
 }
