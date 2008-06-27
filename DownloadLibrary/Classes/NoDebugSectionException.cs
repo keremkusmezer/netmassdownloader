@@ -60,4 +60,14 @@ namespace DownloadLibrary.Classes
 
         }
     }
+
+    public class PdbAlreadyExistingException : Exception
+    {
+        public PdbAlreadyExistingException(Exception innerException)
+            : base("Pdb File Already Exists", innerException)
+        {
+
+        }
+    }
+
 }

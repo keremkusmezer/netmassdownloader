@@ -109,18 +109,27 @@ namespace DownloadLibrary.Classes
         //}
          #endregion
 
-        public static bool ExpandSourceFileToTarget(string sourceFile, string targetFile)
+        public static bool ExpandSourceFileToTarget(string sourceFile, string targetFile,string pdbFileName)
         {
             System.Diagnostics.Process tempProcess = new System.Diagnostics.Process();
 
-
-           // Environment.GetEnvironmentVariable("SystemRoot");
+            //BUGFIX 1511 Delete The Pdb File, If It Already Exists On The File System
+            try
+            {
+                if (System.IO.File.Exists(Path.Combine(targetFile, pdbFileName)))
+                {
+                    System.IO.File.Delete(Path.Combine(targetFile, pdbFileName));
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new PdbAlreadyExistingException(ex);
+            }
+           
             string windowsLocation = Environment.GetEnvironmentVariable("windir");
 
             windowsLocation = windowsLocation + @"\system32\expand.exe";
-
-            
-        
+                    
             //BUGFIX 1118 08.02.2008 Kerem Kusmezer Stupid Me I forgot to put the target directory 
             //string in "\ "\'s so directories including spaces caused problems.
             targetFile = System.IO.Path.GetDirectoryName(targetFile);
@@ -135,17 +144,18 @@ namespace DownloadLibrary.Classes
             tempProcess.WaitForExit();
             return (tempProcess.ExitCode == 0);
         }
-
-        public static MemoryStream ExpandSourceFileToTargets(string sourceFile, string targetFile)
-        {
-            MemoryStream resultStream = null;
-            if (ExpandSourceFileToTarget(sourceFile, targetFile))
-            {
-                resultStream = 
-                    new MemoryStream(System.IO.File.ReadAllBytes(targetFile));
-            }
-            return resultStream;
-        }
+        
+        //Removed Due 1511 BugFix Kerem Kusmezer
+        //public static MemoryStream ExpandSourceFileToTargets(string sourceFile, string targetFile)
+        //{
+        //    MemoryStream resultStream = null;
+        //    if (ExpandSourceFileToTarget(sourceFile, targetFile))
+        //    {
+        //        resultStream = 
+        //            new MemoryStream(System.IO.File.ReadAllBytes(targetFile));
+        //    }
+        //    return resultStream;
+        //}
     }
 }
        
