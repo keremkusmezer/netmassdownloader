@@ -70,10 +70,7 @@ namespace NetMassDownloader {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ----------------------------------
-        ///FileDownload Result
-        ///----------------------------------
-        ///FileCount : {0}
+        ///   Looks up a localized string similar to FileCount : {0}
         ///FileName  : {1}
         ///Directory : {2}.
         /// </summary>
@@ -89,6 +86,18 @@ namespace NetMassDownloader {
         internal static string DownloadingPdb {
             get {
                 return ResourceManager.GetString("DownloadingPdb", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ----------------------------------
+        ///FileDownload Result
+        ///----------------------------------
+        ///.
+        /// </summary>
+        internal static string DownloadingSourceCode {
+            get {
+                return ResourceManager.GetString("DownloadingSourceCode", resourceCulture);
             }
         }
         

@@ -19,6 +19,8 @@
  * 
 */
 #endregion
+
+#region Imported Libraries
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -27,10 +29,11 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
+#endregion
 
 namespace DownloadLibrary.Classes.Eula
 {
-    [CLSCompliant(true)]
+    //[CLSCompliant(true)]
     public class PDBWebClient : System.Net.WebClient
     {
         private bool m_is210Requested;
@@ -146,21 +149,21 @@ namespace DownloadLibrary.Classes.Eula
 
         #region [HDN] Additional Code
         #region Instance Properties
-        private readonly object _syncRoot = new object();
+        private readonly object m_syncRoot = new object();
         protected object SyncRoot {
             get {
-                return _syncRoot;
+                return m_syncRoot;
             }
         }
 
-        private DateTime _lastFileWriteTimeOnServer;
+        private DateTime m_lastFileWriteTimeOnServer;
         public DateTime LastFileWriteTimeOnServer {
-            get { return _lastFileWriteTimeOnServer; }
+            get { return m_lastFileWriteTimeOnServer; }
         }
 
-        private bool _hasLastFileWriteTimeOnServer = false;
+        private bool m_hasLastFileWriteTimeOnServer = false;
         public bool HasLastFileWriteTimeOnServer {
-            get { return _hasLastFileWriteTimeOnServer; }
+            get { return m_hasLastFileWriteTimeOnServer; }
         }
         #endregion Instance Properties
 
@@ -195,8 +198,8 @@ namespace DownloadLibrary.Classes.Eula
             WaitUntilDownloadCompleted( di );
 
             if (di.Successful) {
-                if (_hasLastFileWriteTimeOnServer) {
-                    File.SetLastAccessTimeUtc( fileName, _lastFileWriteTimeOnServer );
+                if (m_hasLastFileWriteTimeOnServer) {
+                    File.SetLastAccessTimeUtc( fileName, m_lastFileWriteTimeOnServer );
                 }
             }
 
@@ -216,7 +219,7 @@ namespace DownloadLibrary.Classes.Eula
         private void WaitUntilDownloadCompleted( DownloadInfo di ) {
             while (true) {
                 object result = null;
-                lock( _syncRoot ) {
+                lock( m_syncRoot ) {
                     result = di.Result;
                 }
 
@@ -229,12 +232,12 @@ namespace DownloadLibrary.Classes.Eula
         }
 
         private void CheckResponse( WebResponse requestResponse ) {
-            _hasLastFileWriteTimeOnServer = false;
+            m_hasLastFileWriteTimeOnServer = false;
 
             string str = requestResponse.Headers["Last-Modified"];
             if (!string.IsNullOrEmpty( str )) {
-                _lastFileWriteTimeOnServer = DateTime.Parse( str );
-                _hasLastFileWriteTimeOnServer = true;
+                m_lastFileWriteTimeOnServer = DateTime.Parse( str );
+                m_hasLastFileWriteTimeOnServer = true;
             }
 
             if (requestResponse is HttpWebResponse)

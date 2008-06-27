@@ -14,6 +14,7 @@
 //Code Partially Taken From His win_pdbx implementation.
 //Great Rocker Great Programmer :) 
 #endregion
+
 #region Imported Libraries
 using System;
 using System.IO;
@@ -22,6 +23,7 @@ using System.Diagnostics;
 using System.Security.Cryptography;
 using DownloadLibrary.Classes;
 #endregion
+
 #region Licence Information
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
@@ -45,6 +47,7 @@ using DownloadLibrary.Classes;
  * 
 */
 #endregion
+
 namespace DownloadLibrary.Classes
 {
     /// <summary>

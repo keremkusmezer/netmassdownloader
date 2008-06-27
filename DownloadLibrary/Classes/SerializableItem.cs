@@ -1,27 +1,40 @@
-﻿using System;
+﻿#region Licence Information
+/*       
+ * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
+ *     
+ * Copyright 2008 Kerem Kusmezer(keremskusmezer@gmail.com)
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * 
+ * Taken From The Following Project Also Written By Kerem Kusmezer 
+ * PdbParser in C# http://www.codeplex.com/pdbparser 
+ * 
+*/
+#endregion
+
+#region Imported Libraries
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-
+#endregion
 
 namespace DownloadLibrary.Classes {
 
-[CLSCompliant(true)]
 public abstract class SerializableItem {
-
-    public static object Deserialize( Type type, string data ) {
-        try {
-            XmlSerializer xmlSerialier = new XmlSerializer(type);
-            return xmlSerialier.Deserialize(new XmlTextReader(new StringReader(data)));
-        }
-        catch( Exception exc ) {
-            Debug.WriteLine( exc.ToString() );
-            return null;
-        }
-    }
 
     public string Serialize() {
         StringBuilder sb = new StringBuilder();
@@ -50,6 +63,5 @@ public abstract class SerializableItem {
         }
     }
     #endregion
-
-} // EndClass
-} // namespace
+} 
+} 

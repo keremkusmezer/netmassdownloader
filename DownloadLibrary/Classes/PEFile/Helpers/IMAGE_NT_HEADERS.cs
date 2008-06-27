@@ -29,8 +29,12 @@
  * 
 */
 #endregion
+
+#region Imported Libraries
 using System.Runtime.InteropServices;
 using System;
+#endregion
+
 namespace DownloadLibrary.PEParsing
 {
 
