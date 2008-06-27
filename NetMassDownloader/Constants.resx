@@ -121,15 +121,18 @@
     <value>The array muse not be null or of zero length.</value>
   </data>
   <data name="DownloadedFileOfFmt" xml:space="preserve">
-    <value>----------------------------------
-FileDownload Result
-----------------------------------
-FileCount : {0}
+    <value>FileCount : {0}
 FileName  : {1}
 Directory : {2}</value>
   </data>
   <data name="DownloadingPdb" xml:space="preserve">
     <value>Downloading {0} </value>
+  </data>
+  <data name="DownloadingSourceCode" xml:space="preserve">
+    <value>----------------------------------
+FileDownload Result
+----------------------------------
+</value>
   </data>
   <data name="ErrorCacheDirNotExist" xml:space="preserve">
     <value>The Visual Studio cache directory, '{0}', does not exist.</value>

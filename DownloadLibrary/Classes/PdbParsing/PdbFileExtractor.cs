@@ -31,9 +31,10 @@ using System.Diagnostics;
 using DownloadLibrary.Classes.Eula;
 using System.Text.RegularExpressions;
 #endregion
+
 namespace DownloadLibrary.Classes
 {
-    [CLSCompliant(true)]
+    //[CLSCompliant(true)]
     public class PdbFileExtractor
     {
 
@@ -513,7 +514,7 @@ namespace DownloadLibrary.Classes
     }
 
     #region Class: DownloadFileEventArgs
-    [CLSCompliant(true)]
+    //[CLSCompliant(true)]
     public class DownloadFileEventArgs : EventArgs {
         private string _targetFilePath;
         private string _targetFileName;

@@ -40,13 +40,35 @@ using System.Text;
 using DownloadLibrary.Classes.Eula;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
+using System.Xml;
+using System.Diagnostics;
 #endregion
 
 namespace DownloadLibrary.Classes
 {
     public static class Utility
     {
- 
+        /// <summary>
+        /// Deserializes The Given Xml String To Given Type
+        /// </summary>
+        /// <param name="type">Target Type To The Object Should Be Deserialized</param>
+        /// <param name="data">Xml Data Containing The Serialized Object</param>
+        /// <returns>Null If The Object Cannot Be Deserialized, If success returns the deserialized object</returns>
+        public static object Deserialize(Type type, string data)
+        {
+            try
+            {
+                XmlSerializer xmlSerializer = new XmlSerializer(type);
+                return xmlSerializer.Deserialize(new XmlTextReader(new StringReader(data)));
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine(exc.ToString());
+                return null;
+            }
+        }
+
         public static string PreparePath(string path)
         {
             string[] pathWithoutDrive = path.Split(System.IO.Path.VolumeSeparatorChar);
@@ -76,14 +98,12 @@ namespace DownloadLibrary.Classes
             public byte[] FoundContent
             {
                 get { return m_foundContent; }
-                //set { m_foundContent = value; }
             }
             private int m_beginPosition;
 
             public int BeginPosition
             {
                 get { return m_beginPosition; }
-                //set { m_beginPosition = value; }
             }
 
             public override string ToString()
@@ -96,7 +116,6 @@ namespace DownloadLibrary.Classes
                 {
                     return String.Empty;
                 }
-                //return base.ToString();
             }
 
             public SearchLocation(byte[] foundContent, int beginPosition)
@@ -210,6 +229,7 @@ namespace DownloadLibrary.Classes
             return ToByteArray(byteStorageContainer);
 
         }
+
         //public static byte[] ReplaceInByteArray(byte[] sourceArray, byte[] statementToFind, byte[] statementToReplace)
         //{
         //    StringBuilder byteStorageForSearch = new StringBuilder();
@@ -236,6 +256,7 @@ namespace DownloadLibrary.Classes
         //    return Utility.ToByteArray(byteStorageContainer);
 
         //}
+
         public static String ToStringHexFromString(String SourceString)
         {
             return Utility.ToStringHex(System.Text.Encoding.ASCII.GetBytes(SourceString));

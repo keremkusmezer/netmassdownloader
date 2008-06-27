@@ -21,6 +21,7 @@
  * 
 */
 #endregion
+
 #region Imported Libraries
 using System;
 using System.Collections;
@@ -36,7 +37,7 @@ using System.Text.RegularExpressions;
 
 namespace DownloadLibrary.PEParsing
 {
-    [CLSCompliant(true)]
+    //[CLSCompliant(true)]
     public class PEFile
     {
         // Private members to track information at runtime
@@ -106,27 +107,27 @@ namespace DownloadLibrary.PEParsing
         }
 
         //{{HDN==================================================
-        private FileInfo _fileInfo;
+        private FileInfo m_fileInfo;
         public FileInfo FileInfo {
-            get { return _fileInfo; }
+            get { return m_fileInfo; }
         }
 
-        private FileVersionInfo _fileVersionInfo;
+        private FileVersionInfo m_fileVersionInfo;
         public FileVersionInfo FileVersionInfo {
-            get { return _fileVersionInfo; }
+            get { return m_fileVersionInfo; }
         }
 
-        private bool _cleanupTempCompressedSymbols;
+        private bool m_cleanupTempCompressedSymbols;
         public bool CleanupTempCompressedSymbols {
-            get { return _cleanupTempCompressedSymbols; }
-            set { _cleanupTempCompressedSymbols = value; }
+            get { return m_cleanupTempCompressedSymbols; }
+            set { m_cleanupTempCompressedSymbols = value; }
         }
 
 
-        private string _symbolServerUrl;
+        private string m_symbolServerUrl;
         public string SymbolServerUrl {
-            get { return _symbolServerUrl; }
-            set { _symbolServerUrl = value; }
+            get { return m_symbolServerUrl; }
+            set { m_symbolServerUrl = value; }
         }
 
 
@@ -167,7 +168,7 @@ namespace DownloadLibrary.PEParsing
                 System.Diagnostics.Debug.WriteLine("Pdb Location For Retrieval:" + targetFile);
 
                 if (pdbDownloader.DownloadFileWithProgress(targetFile, compressedFileName)) {
-                    if (Decompressor.ExpandSourceFileToTarget(compressedFileName, targetPath))
+                    if (Decompressor.ExpandSourceFileToTarget(compressedFileName, targetPath, this.PdbFileName))
                     {
                         allOk = true;
                     }
@@ -215,13 +216,13 @@ namespace DownloadLibrary.PEParsing
             if (!peContainer.Exists)
                 throw new FileNotFoundException(path);
 
-            _fileInfo = peContainer;
+            m_fileInfo = peContainer;
             try {
-                _fileVersionInfo = FileVersionInfo.GetVersionInfo(path);
+                m_fileVersionInfo = FileVersionInfo.GetVersionInfo(path);
             }
             catch( Exception exc ) {
                 Debug.WriteLine( exc.ToString() );
-                _fileVersionInfo = null;
+                m_fileVersionInfo = null;
             }
 
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))
@@ -655,88 +656,88 @@ namespace DownloadLibrary.PEParsing
         public XmlPEFileItem() {}
         public XmlPEFileItem( PEFile peFile ) {
             FileInfo fi = peFile.FileInfo;
-            _fileName = fi.Name;
-            _size = fi.Length.ToString();
-            _lastWriteTimeUtc = fi.LastWriteTimeUtc.ToString();
+            m_fileName = fi.Name;
+            m_size = fi.Length.ToString();
+            m_lastWriteTimeUtc = fi.LastWriteTimeUtc.ToString();
 
             FileVersionInfo vi = peFile.FileVersionInfo;
             if (vi != null) {
-                _description = vi.FileDescription;
-                _version = vi.FileVersion;
+                m_description = vi.FileDescription;
+                m_version = vi.FileVersion;
             }
 
-            _pdbFileName = peFile.PdbFileName;
-            _pdbGuid = peFile.PdbGuid.ToString();
-            _pdbVersion = peFile.PdbVersion;
-            _pdbAge = peFile.PdbAge;
+            m_pdbFileName = peFile.PdbFileName;
+            m_pdbGuid = peFile.PdbGuid.ToString();
+            m_pdbVersion = peFile.PdbVersion;
+            m_pdbAge = peFile.PdbAge;
         }
 
         #region ///// PE /////  
-        private string _fileName;
-        private string _description;
-        private string _version;
-        private string _size;
-        private string _lastWriteTimeUtc;
+        private string m_fileName;
+        private string m_description;
+        private string m_version;
+        private string m_size;
+        private string m_lastWriteTimeUtc;
 
         [XmlElement("FileName")]
         public string FileName {
-            get { return _fileName; }
-            set { _fileName = value; }
+            get { return m_fileName; }
+            set { m_fileName = value; }
         }
 
         [XmlElement("Description")]
         public string Description {
-            get { return _description; }
-            set { _description = value; }
+            get { return m_description; }
+            set { m_description = value; }
         }
 
         [XmlElement("Version")]
         public string Version {
-            get { return _version; }
-            set { _version = value; }
+            get { return m_version; }
+            set { m_version = value; }
         }
 
         [XmlElement("Size")]
         public string Size {
-            get { return _size; }
-            set { _size = value; }
+            get { return m_size; }
+            set { m_size = value; }
         }
 
         [XmlElement("LastWriteTimeUtc")]
         public string LastWriteTimeUtc {
-            get { return _lastWriteTimeUtc; }
-            set { _lastWriteTimeUtc = value; }
+            get { return m_lastWriteTimeUtc; }
+            set { m_lastWriteTimeUtc = value; }
         }
         #endregion
 
         #region ///// PDB /////
-        private string _pdbFileName;
-        private string _pdbGuid;
-        private string _pdbVersion;
-        private string _pdbAge;
+        private string m_pdbFileName;
+        private string m_pdbGuid;
+        private string m_pdbVersion;
+        private string m_pdbAge;
 
         [XmlElement("PdbFileName")]
         public string PdbFileName {
-            get { return _pdbFileName; }
-            set { _pdbFileName = value; }
+            get { return m_pdbFileName; }
+            set { m_pdbFileName = value; }
         }
 
         [XmlElement("PdbGuid")]
         public string PdbGuid {
-            get { return _pdbGuid; }
-            set { _pdbGuid = value; }
+            get { return m_pdbGuid; }
+            set { m_pdbGuid = value; }
         }
 
         [XmlElement("PdbVersion")]
         public string PdbVersion {
-            get { return _pdbVersion; }
-            set { _pdbVersion = value; }
+            get { return m_pdbVersion; }
+            set { m_pdbVersion = value; }
         }
 
         [XmlElement("PdbAge")]
         public string PdbAge {
-            get { return _pdbAge; }
-            set { _pdbAge = value; }
+            get { return m_pdbAge; }
+            set { m_pdbAge = value; }
         }
         #endregion
     }

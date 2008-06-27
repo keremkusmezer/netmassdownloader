@@ -133,6 +133,7 @@ using System.Reflection;
 //sd.exe -p %fnvar%(%var2%) print -o %srcsrvtrg% -q %depot%/%var3%@%label%
 //*/
 #endregion
+
 namespace DownloadLibrary.Classes
 {
     public class SrcSrvDownloadAbleFile
@@ -411,8 +412,10 @@ namespace DownloadLibrary.Classes
                             {
                                 try
                                 {
-                                    ((PropertyInfo)m_tempTable[parameters[0]]).SetValue(this, parameters[1], null);
-                                    //GetType().GetProperty()
+                                    if (null != m_tempTable[parameters[0]])
+                                    {
+                                        ((PropertyInfo)m_tempTable[parameters[0]]).SetValue(this, parameters[1], null);
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
