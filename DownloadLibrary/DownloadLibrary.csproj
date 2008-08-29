@@ -58,6 +58,7 @@
     <Compile Include="Classes\Constants.cs" />
     <Compile Include="Classes\Decompressor.cs" />
     <Compile Include="Classes\Eula\EulaException.cs" />
+    <Compile Include="Classes\FrameworkVersionDetector.cs" />
     <Compile Include="Classes\NoDebugSectionException.cs" />
     <Compile Include="Classes\PdbParsing\PdbBaseStreamReader.cs" />
     <Compile Include="Classes\PdbParsing\PdbParser.cs" />
