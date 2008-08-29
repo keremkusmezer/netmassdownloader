@@ -104,7 +104,7 @@ namespace DownloadLibrary.Classes.Eula
         {
             if (this.Headers["User-Agent"] == null)
             {
-                this.Headers.Add("User-Agent", Constants.userAgentHeader);
+                this.Headers.Add("User-Agent", FrameworkVersionData.RelevantVersionData.GetUserAgentVersion());
             }
             base.DownloadFile(address, fileName);
         }
@@ -113,7 +113,7 @@ namespace DownloadLibrary.Classes.Eula
         {
             if (this.Headers["User-Agent"] == null)
             {
-                this.Headers.Add("User-Agent", Constants.userAgentHeader);
+                this.Headers.Add("User-Agent", FrameworkVersionData.RelevantVersionData.GetUserAgentVersion());
             }
             base.DownloadFile(address, fileName);
         }
@@ -121,7 +121,7 @@ namespace DownloadLibrary.Classes.Eula
         {
             if (this.Headers["User-Agent"] == null)
             {
-                this.Headers.Add("User-Agent", Constants.userAgentHeader);
+                this.Headers.Add("User-Agent", FrameworkVersionData.RelevantVersionData.GetUserAgentVersion());
             }
             byte[] resultBytes = base.DownloadData(url);
             if (m_is210Requested)

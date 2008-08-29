@@ -290,7 +290,7 @@ namespace DownloadLibrary.Classes
         public static void AddUserAgentHeaderIfNecessary( WebClient wc ) {
             const string header = "User-Agent";
             if (wc.Headers[header] == null) {
-                wc.Headers.Add(header, Constants.userAgentHeader);
+                wc.Headers.Add(header, FrameworkVersionData.RelevantVersionData.GetUserAgentVersion());
             }
         }
         public static void AddEulaCookieHeaderIfNecessary( WebClient wc ) {
@@ -313,7 +313,7 @@ namespace DownloadLibrary.Classes
             return GetMatchGroupValue( m, "domain" );
         }
         private static string GetMatchGroupValue( Match m, string groupName ) {
-            Group g = m.Groups["groupName"];
+            Group g = m.Groups[groupName];
             return (g != null) ? g.Value : string.Empty;            
         }
 
