@@ -81,7 +81,10 @@ namespace DownloadLibrary.Classes
             }
             return String.Empty;
         }
-
+        public static string CurrentDirectoryPath()
+        {
+            return CleanupPath(Environment.CurrentDirectory);
+        }
         public static string CleanupPath(string path)
         {
             if (!path.EndsWith("\\"))

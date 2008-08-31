@@ -195,37 +195,65 @@ namespace NetMassDownloader
                         //if ( null != resultStream )
                         if (downloadPdbFileOk && AppSettings.DownloadSourceCode)
                         {
-                            PdbFileExtractor extract = new AppPdbFileExtractor( pdbToProcess );
-                            extract.SkipExistingSourceFiles = AppSettings.SkipExistingSourceFiles;
-                            extract.ProxyMatch = argValues.ProxyMatch;
-                            // If we are not extracting to a symbol server use
-                            // the file paths in the PDB so everything works 
-                            // with VS 2005.
-                            extract.UseSourceFilePath =
-                                                    !argValues.UsingSymbolCache;
-
-                            extract.SourceFileDownloaded += new PdbFileExtractor.
-                                     SourceCodeHandler ( SourceFileDownloaded );
-
-                            extract.EulaAcceptRequested += new PdbFileExtractor.
-                                            EulaHandler ( EulaAcceptRequested );
-
-                            String finalSrcPath = argValues.Output;
-
-                            if ( true == argValues.UsingSymbolCache )
+                            try
                             {
-                                // Visual Studio is hardcoded to look at the 
-                                // "src\source\.net\8.0" directory for VS 2008 
-                                // RTM and "src\source\dotnetfx35SP1_3053\1.1" 
-                                // for VS 2008 SP1. As SP 3.5 SP1 requires VS 
-                                // 2008 SP1, let's assume that. This will
-                                // probably break in a future release.
-                                finalSrcPath += 
-                                           @"src\source\dotnetfx35SP1_3053\1.1";
-                            }
-                            extract.DownloadWholeFiles ( finalSrcPath );
-                            numProcessFiles++;
+                                PdbFileExtractor extract = new AppPdbFileExtractor(pdbToProcess);
+                                extract.SkipExistingSourceFiles = AppSettings.SkipExistingSourceFiles;
+                                extract.ProxyMatch = argValues.ProxyMatch;
+                                // If we are not extracting to a symbol server use
+                                // the file paths in the PDB so everything works 
+                                // with VS 2005.
+                                extract.UseSourceFilePath =
+                                                        !argValues.UsingSymbolCache;
 
+                                extract.SourceFileDownloaded += new PdbFileExtractor.
+                                         SourceCodeHandler(SourceFileDownloaded);
+
+                                extract.EulaAcceptRequested += new PdbFileExtractor.
+                                                EulaHandler(EulaAcceptRequested);
+
+                                String finalSrcPath = argValues.Output;
+
+                                if (true == argValues.UsingSymbolCache)
+                                {
+                                    /* Visual Studio is hardcoded to look at the 
+                                     "src\source\.net\8.0" directory for VS 2008 
+                                     RTM and "src\source\dotnetfx35SP1_3053\1.1" 
+                                     for VS 2008 SP1. As SP 3.5 SP1 requires VS 
+                                     2008 SP1, let's assume that. This will
+                                     probably break in a future release.
+                                     Bugfix Kerem Kusmezer We Already Have The Version Detection So Why Not Use It
+                                     Kerem Kusmezer Information Update
+                                     This information is actually wrong, because the srvsrc file already holds this information for each of the pdb's
+                                     So we don't need to hardcode this information here 
+                                     For Example When I Compare The SrvSrc For mscorlib for SP1 and RTM The Http Alias Is Like This:
+                                     RTM HTTP_ALIAS=Http://ReferenceSource.microsoft.com/source/.net/8.0
+                                     SP1  HTTP_ALIAS=Http://ReferenceSource.microsoft.com/source/dotnetfx35SP1_3053/1.1
+                                     so we can always extract this information from the pdb itself directly instead of hardcoding it directly.
+                                     TODO Fix Here In The Main Engine Accordingly Kerem Kusmezer To Support Future Versions
+                                    */
+
+                                    if (FrameworkVersionData.RelevantVersionData.SPLevel == 0)
+                                    {
+                                        finalSrcPath +=
+                                                @"src\source\.net\8.0\";
+                                    }
+                                    else
+                                    {
+                                        finalSrcPath +=
+                                               @"src\source\dotnetfx35SP1_3053\1.1";
+                                    }
+
+                                }
+                                extract.DownloadWholeFiles(finalSrcPath);
+                                numProcessFiles++;
+                            }
+                            catch (InvalidOperationException invalidException)
+                            {
+                                //Kerem Kusmezer BugFix 31.08.2008
+                                Console.WriteLine(invalidException.Message);
+                                numNotProcessedFiles++;
+                            }
                             Console.WriteLine();
                         }
                         else
@@ -375,7 +403,8 @@ namespace NetMassDownloader
             // where the VS debugger looks at them for source. If we are 
             // running for version 9.0, add the MicrosoftPublicSymbols onto
             // the symbol cache name.
-            if ( "9.0" == vsVersion )
+            // BugFix Kerem Kusmezer Check Also The SPLevel So It now works without SP1 also.
+            if ( "9.0" == vsVersion  && FrameworkVersionData.RelevantVersionData.SPLevel > 0)
             {
                 symbolServer += "MicrosoftPublicSymbols\\";
             }

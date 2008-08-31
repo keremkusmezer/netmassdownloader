@@ -7,9 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownloadLibrary", "..\Downl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetMassDownloader", "..\NetMassDownloader\NetMassDownloader.csproj", "{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SrvSrcExtractor", "SrvSrcExtractor\SrvSrcExtractor.csproj", "{567260A1-B18F-4F66-BE3C-47139AA0DC7D}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs05.codeplex.com/
 		SccLocalPath0 = .
@@ -19,6 +21,9 @@ Global
 		SccProjectUniqueName2 = ..\\NetMassDownloader\\NetMassDownloader.csproj
 		SccProjectName2 = ../NetMassDownloader
 		SccLocalPath2 = ..\\NetMassDownloader
+		SccProjectUniqueName3 = SrvSrcExtractor\\SrvSrcExtractor.csproj
+		SccProjectName3 = SrvSrcExtractor
+		SccLocalPath3 = SrvSrcExtractor
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +38,10 @@ Global
 		{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD0E942-B462-4367-A64D-2AFF1BDF5E5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{567260A1-B18F-4F66-BE3C-47139AA0DC7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{567260A1-B18F-4F66-BE3C-47139AA0DC7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{567260A1-B18F-4F66-BE3C-47139AA0DC7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{567260A1-B18F-4F66-BE3C-47139AA0DC7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
