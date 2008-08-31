@@ -202,6 +202,27 @@ namespace DownloadLibrary.Classes.Eula
                     File.SetLastAccessTimeUtc( fileName, m_lastFileWriteTimeOnServer );
                 }
             }
+            else
+            {
+                // The WebClient base class can create a zero byte file so
+                // make sure to delete the file and directory so there's not
+                // bad PDB files left around.  I would rather not do this here
+                // but the problem is in WebClient, not this application.
+                if ( true == File.Exists ( fileName ) )
+                {
+                    File.Delete ( fileName );
+                    String file = Path.GetFileName ( fileName );
+                    String path = Path.GetDirectoryName ( fileName );
+                    // If the filename is in the path, this file was
+                    // going into the symbol server.
+                    int i = path.IndexOf ( file );
+                    if ( -1 != i )
+                    {
+                        path = path.Substring ( 0 , i + file.Length );
+                    }
+                    Directory.Delete ( path , true );
+                }
+            }
 
             return di.Successful;
         }

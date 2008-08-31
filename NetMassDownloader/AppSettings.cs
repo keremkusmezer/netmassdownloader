@@ -10,7 +10,7 @@ public static class AppSettings {
 
     /// <summary>
     /// </summary>
-    public const string Indent = "    "; // 4 spaces
+    public const string Indent = " "; 
 
     /// <summary>
     /// </summary>

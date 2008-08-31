@@ -194,7 +194,7 @@ complete version. For example, Visual Studio 2005 is 8.0 and Visual Studio
 </value>
   </data>
   <data name="NoDebugSection" xml:space="preserve">
-    <value>File has no .debug section:{0}{1}{2}{0}</value>
+    <value>Downloading {0}  (No .debug section)</value>
   </data>
   <data name="NoPdbFileFmt" xml:space="preserve">
     <value>No matching PDB file on symbol server for {0}</value>
@@ -212,10 +212,10 @@ complete version. For example, Visual Studio 2005 is 8.0 and Visual Studio
     <value>PDB file already in the symbol server cache for:{0}{1}</value>
   </data>
   <data name="ProcessingFileFmt" xml:space="preserve">
-    <value>Processing {0}...</value>
+    <value>Processing {0}</value>
   </data>
   <data name="ProcessingPdb" xml:space="preserve">
-    <value>Processing {0} ...</value>
+    <value>Processing {0}</value>
   </data>
   <data name="Proxy" xml:space="preserve">
     <value>Proxy switch selected , but wrong proxy parameters supplied.</value>

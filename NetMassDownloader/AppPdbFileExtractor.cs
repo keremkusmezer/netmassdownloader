@@ -74,7 +74,7 @@ public class AppPdbFileExtractor : PdbFileExtractor {
     /// <param name="sender"></param>
     /// <param name="args"></param>
     protected override void OnBeginDownloadSourceFile( object sender, DownloadFileEventArgs args ) {
-        Console.Write(Constants.DownloadingSourceCode);
+        //Console.Write(Constants.DownloadingSourceCode);
         Console.Write("{0}Downloading {1}", String.Empty, args.TargetFileName);
         //Console.Write("{0}Downloading {1}", AppSettings.Indent, args.TargetFileName);
     }
