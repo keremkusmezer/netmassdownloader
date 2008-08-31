@@ -264,7 +264,7 @@ namespace DownloadLibrary.Classes
                     args.TargetFilePath = UseSourceFilePath
                         ? tempEnum.Current.LocalFileTargetAlternative : tempEnum.Current.LocalFileTarget;
                     if (_skipExistingSourceFiles) {
-                        if (File.Exists(args.TargetFilePath)) {
+                        if (File.Exists(args.TargetFilePath) || Path.GetExtension(args.TargetFilePath) == ".h") {
                             continue;
                         }
                     }
