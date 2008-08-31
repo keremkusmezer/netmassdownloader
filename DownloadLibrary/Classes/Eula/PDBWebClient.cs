@@ -210,7 +210,7 @@ namespace DownloadLibrary.Classes.Eula
                 // bad PDB files left around.  I would rather not do this here
                 // but the problem is in WebClient, not this application.
                 // BugFix 2623 it doesn't work with -o switch instead deleting the above folder , it deletes the entire folder.
-                if ( true == File.Exists ( fileName ) )
+                if ( true == File.Exists ( fileName )  && new FileInfo(fileName).Length == 0)
                 {
                     File.Delete ( fileName );
                     String file = Path.GetFileName ( fileName );
