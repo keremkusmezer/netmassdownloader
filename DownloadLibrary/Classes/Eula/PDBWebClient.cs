@@ -204,10 +204,12 @@ namespace DownloadLibrary.Classes.Eula
             }
             else
             {
+
                 // The WebClient base class can create a zero byte file so
                 // make sure to delete the file and directory so there's not
                 // bad PDB files left around.  I would rather not do this here
                 // but the problem is in WebClient, not this application.
+                // BugFix 2623 it doesn't work with -o switch instead deleting the above folder , it deletes the entire folder.
                 if ( true == File.Exists ( fileName ) )
                 {
                     File.Delete ( fileName );
@@ -219,8 +221,9 @@ namespace DownloadLibrary.Classes.Eula
                     if ( -1 != i )
                     {
                         path = path.Substring ( 0 , i + file.Length );
+                        //Bugfix 2623 So Moving The Folder Delete Here Solves The Bug
+                        Directory.Delete(path, true);
                     }
-                    Directory.Delete ( path , true );
                 }
             }
 
