@@ -114,6 +114,10 @@ namespace SrvSrcExtractor
             {
                 Console.WriteLine(ex.Message);
             }
+            catch (InvalidDataException ex)
+            {
+                Console.WriteLine("Not a Pdb File");
+            }
             catch (System.IO.IOException ioException)
             {
                 Console.WriteLine("An IO Exception Occurred While Extracting The Pdb File:" + ioException.Message);
