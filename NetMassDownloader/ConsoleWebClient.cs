@@ -104,7 +104,7 @@ public class ConsoleWebClient : PDBWebClient {
 
             bool firstTime = di.FirstTime;
             if (firstTime) {
-                Console.Write( "...\t| " );
+                Console.Write( "\n" );
                 di.FirstTime = false;
             }
 
@@ -135,9 +135,9 @@ public class ConsoleWebClient : PDBWebClient {
                     PrintPlaceHolder( str, di );
                 }
                 else {
-                    if (firstTime) {
-                        PrintPlaceHolder( PROGRESS_PLACEHOLDER, di );
-                    }
+                    //if (firstTime) {
+                    //    PrintPlaceHolder( PROGRESS_PLACEHOLDER, di );
+                    //}
                 }
             }
         } // lock
@@ -190,10 +190,10 @@ public class ConsoleWebClient : PDBWebClient {
                     if (response is HttpWebResponse) {
                         HttpStatusCode statusCode = ((HttpWebResponse) response).StatusCode;
                         if (statusCode == HttpStatusCode.NotFound) {
-                            excMessage = "...\tNot available";
+                            excMessage = " (Not available)";
                         }
                         else {
-                            excMessage = string.Format( "...\t{0}: {1}", (int) statusCode, statusCode );
+                            excMessage = string.Format( " {0}: {1}", (int) statusCode, statusCode );
                         }
                     }
                 }

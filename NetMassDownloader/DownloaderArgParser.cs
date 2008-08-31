@@ -98,7 +98,7 @@ namespace NetMassDownloader
         /// <summary>
         /// Holds the VS version number.
         /// </summary>
-        private String VsVersion
+        public String VsVersion
         {
             get { return vsVersion; }
             set { vsVersion = value; }
@@ -195,7 +195,7 @@ namespace NetMassDownloader
         {
             this.Files = new List<String> ( );
             this.Output = String.Empty;
-            this.VsVersion = String.Empty;
+            this.VsVersion = "9.0" ;
 
             errorMessage = String.Empty;
         }

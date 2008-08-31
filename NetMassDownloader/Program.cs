@@ -147,8 +147,9 @@ namespace NetMassDownloader
                     if ( true == argValues.UsingSymbolCache )
                     {
                         finalPdbPath =
-                                    CreateSymbolServerDirectory ( finalPdbPath ,
-                                                                  peFile );
+                           CreateSymbolServerDirectory ( finalPdbPath ,
+                                                          peFile ,
+                                                          argValues.VsVersion );
                     }
 
                     // The final pdb file.
@@ -214,10 +215,13 @@ namespace NetMassDownloader
                             if ( true == argValues.UsingSymbolCache )
                             {
                                 // Visual Studio is hardcoded to look at the 
-                                // "src\source\.net\8.0" directory. I'm not sure
-                                // how this will hold up in future versions of 
-                                // VS and .NET reference source releases.
-                                finalSrcPath += @"src\source\.net\8.0\";
+                                // "src\source\.net\8.0" directory for VS 2008 
+                                // RTM and "src\source\dotnetfx35SP1_3053\1.1" 
+                                // for VS 2008 SP1. As SP 3.5 SP1 requires VS 
+                                // 2008 SP1, let's assume that. This will
+                                // probably break in a future release.
+                                finalSrcPath += 
+                                           @"src\source\dotnetfx35SP1_3053\1.1";
                             }
                             extract.DownloadWholeFiles ( finalSrcPath );
                             numProcessFiles++;
@@ -271,7 +275,8 @@ namespace NetMassDownloader
                 catch ( NoDebugSectionException )
                 {
                     // There is not a .debug section in the PE file.
-                    Console.WriteLine( Constants.NoDebugSection, Environment.NewLine, AppSettings.Indent, file );
+                    Console.WriteLine( Constants.NoDebugSection, 
+                                       Path.GetFileName (file) );
                     numNotProcessedFiles++;
                 }
             }
@@ -355,12 +360,26 @@ namespace NetMassDownloader
         /// <param name="peFileInfo">
         /// The <see cref="PEFile"/> class describing the loaded PE file.
         /// </param>
+        /// <param name="vsVersion">
+        /// The version of Visual Studio using the cache.
+        /// </param>
         /// <returns>
         /// The full path name for the PDB file location.
         /// </returns>
         static String CreateSymbolServerDirectory ( String symbolServer ,
-                                                    PEFile peFileInfo )
+                                                    PEFile peFileInfo ,
+                                                    String vsVersion )
         {
+            // Starting with VS 2008 SP1, the PDBs are downloaded to 
+            // <symbol cache>\\MicrosoftPublicSymbols and that's the only place
+            // where the VS debugger looks at them for source. If we are 
+            // running for version 9.0, add the MicrosoftPublicSymbols onto
+            // the symbol cache name.
+            if ( "9.0" == vsVersion )
+            {
+                symbolServer += "MicrosoftPublicSymbols\\";
+            }
+
             // Append on the PDB name and GUID since this is going into the 
             // symbol server. If there's any path information on the PDB file,
             // I'll only do the filename itself.

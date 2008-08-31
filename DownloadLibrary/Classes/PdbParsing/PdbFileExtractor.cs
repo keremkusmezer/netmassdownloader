@@ -154,8 +154,14 @@ namespace DownloadLibrary.Classes
             }
             else
             {
+                byte [] data = System.IO.File.ReadAllBytes ( m_pdbFileName );
+                if ( 0 == data.Length )
+                {
+                    String msg = m_pdbFileName + " appears corrupt" ;
+                    throw new InvalidOperationException ( msg );
+                }
                 m_internalPdbParser = 
-                    new PdbParser(new System.IO.MemoryStream(System.IO.File.ReadAllBytes(m_pdbFileName)));
+                    new PdbParser(new System.IO.MemoryStream(data));
             }
         }
 
@@ -209,6 +215,10 @@ namespace DownloadLibrary.Classes
         {
             targetPath = Utility.CleanupPath(targetPath);
             String locatedSrcSrvBody = LocateFileIndex();
+            if ( null == locatedSrcSrvBody )
+            {
+                return ( new List<SrcSrvDownloadAbleFile>() ) ;
+            }
             SrcSrvFile tempSrcSrvFile = new SrcSrvFile(locatedSrcSrvBody, targetPath);
             tempSrcSrvFile.ParseBody();
             return tempSrcSrvFile.FilesToBeDownloaded;
@@ -398,6 +408,10 @@ namespace DownloadLibrary.Classes
         {
             MemoryStream srvsrcLocation = 
                 this.InternalPdbParser.GetStreamBeginsWithBytesArrayASCII(Constants.SRCSRVLocator);
+            if ( null == srvsrcLocation )
+            {
+                return ( null );
+            }
             return System.Text.Encoding.ASCII.GetString(srvsrcLocation.ToArray());
         }
 

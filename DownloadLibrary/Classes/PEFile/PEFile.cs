@@ -190,231 +190,59 @@ namespace DownloadLibrary.PEParsing
 
         public bool DownloadPDBFromServer(string targetPath)
         {
-
-
-
-
             bool allOk = false;
-
-
-
-
-
-
             try
             {
-
-                targetPath =
-
-                Utility.CleanupPath(targetPath);
-
-
-
-
-
-
+                targetPath = Utility.CleanupPath(targetPath);
                 if (!System.IO.Directory.Exists(targetPath))
                 {
-
-                    System.IO.
-
-
-                    Directory.CreateDirectory(targetPath);
-
-
-
+                    System.IO.Directory.CreateDirectory(targetPath);
                 }
-
-
-
-
                 PDBWebClient pdbDownloader = GetWebClientWithCookie();
-
-
-
-
-
-
                 string targetFile = this.PdbFileName;
-
-
-
-
-
 
                 if (FrameworkVersionData.RelevantVersionData.SPLevel == 0)
                 {
+                    targetFile = String.Format("{0}{1}/{2}/{3}",
+                                    this.SymbolServerUrl, targetFile, this.PdbVersion, targetFile.Replace(".pdb", ".pd_"));
+                    string compressedFileName = targetPath + this.PdbFileName.Replace(".pdb", ".pd_");
 
-                    targetFile =
-
-
-                    String.Format("{0}{1}/{2}/{3}",
-
-
-
-
-
-
-                    this.SymbolServerUrl, targetFile, this.PdbVersion, targetFile.Replace(".pdb", ".pd_"));
-
-
-
-
-
-
-                    string compressedFileName =
-
-
-
-                    targetPath +
-
-
-                    this.PdbFileName.Replace(".pdb", ".pd_");
-
-
-
-                    System.Diagnostics.
-
-
-                    Debug.WriteLine("Pdb Location For Retrieval:" + targetFile);
-
-
-
-
-
+                    System.Diagnostics.Debug.WriteLine("Pdb Location For Retrieval:" + targetFile);
 
                     if (pdbDownloader.DownloadFileWithProgress(targetFile, compressedFileName))
                     {
-
-
-
-
                         if (Decompressor.ExpandSourceFileToTarget(compressedFileName, targetPath, this.PdbFileName))
                         {
-
-                            allOk =
-
-
-                            true;
-
-
-
+                            allOk = true;
                         }
-
                     }
-
-
-
-
                     if (this.CleanupTempCompressedSymbols)
                     {
-
-
-
-
                         if (File.Exists(compressedFileName))
                         {
-
-
-
-
                             File.Delete(compressedFileName);
-
-
-
                         }
-
                     }
-
                 }
-
-
-
-
                 else
                 {
-
-                    targetFile =
-
-                    String.Format("{0}{1}/{2}/{3}",
-
-
-
-
-
-
-                    this.SymbolServerUrl, targetFile, this.PdbVersion, targetFile);
-
-
-
-
-
-
-                    string compressedFileName =
-
-
-
-                    targetPath +
-
-
-                    this.PdbFileName;
-
-
-
-
-
-
+                    targetFile = String.Format("{0}{1}/{2}/{3}", this.SymbolServerUrl, targetFile, this.PdbVersion, targetFile);
+                    string compressedFileName = targetPath + this.PdbFileName;
                     if (pdbDownloader.DownloadFileWithProgress(targetFile, compressedFileName))
                     {
-
-                        allOk =
-
-
-                        true;
-
-
-
+                        allOk = true;
                     }
-
                 }
-
             }
-
-
-
-
             catch (Exception ex)
             {
-
-                System.Diagnostics.
-
-
-                Debug.Write(ex.Message + "targetPath download failed");
-
-
-
-
-
-
+                System.Diagnostics.Debug.Write(ex.Message + "targetPath download failed");
                 throw;
-
-
-
             }
-
-
-
-
             return allOk;
-
-
-
         }
 
-
-
         private Match m_proxyMatch;
-        
         public Match ProxyMatch
         {
             protected get

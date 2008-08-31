@@ -210,6 +210,13 @@ namespace DownloadLibrary.Classes
                 return (null);
             }
 
+            // With VS 2008 SP1, some of the files on the reference symbol
+            // server don't have the HTTP_ALIAS value set.
+            if ( null == Http_extract_target )
+            {
+                return ( null );
+            }
+
             string tempTarget =
                 Http_extract_target;
 
@@ -398,8 +405,11 @@ namespace DownloadLibrary.Classes
 
                     if (insideFileParsing)
                     {
-                        FilesToBeDownloaded.Add(
-                        BuildSrcSrvDownloadFromFile(m_targetPath, currentLine));
+                        SrcSrvDownloadAbleFile file = BuildSrcSrvDownloadFromFile ( m_targetPath , currentLine );
+                        if ( null != file )
+                        {
+                            FilesToBeDownloaded.Add ( file );
+                        }
                     }
                     else
                     {
