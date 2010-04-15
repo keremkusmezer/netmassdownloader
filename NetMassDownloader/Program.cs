@@ -1,5 +1,5 @@
 ﻿/*------------------------------------------------------------------------------
- * SourceCodeDownloader - Kerem Kusmezer (keremskusmezer@gmail.com)
+ * SourceCodeDownloader - Kerem Kusmezer (izzetkeremskusmezer@gmail.com)
  *                        John Robbins (john@wintellect.com)
  * 
  * Download all the .NET Reference Sources and PDBs to pre-populate your 
@@ -11,7 +11,7 @@
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
  *     
- * Copyright 2008 Kerem Kusmezer(keremskusmezer@gmail.com) And John Robbins (john@wintellect.com)
+ * Copyright 2008 Kerem Kusmezer(izzetkeremskusmezer@gmail.com) And John Robbins (john@wintellect.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -43,7 +43,7 @@ using DownloadLibrary.PEParsing;
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
  *     
- * Copyright 2008 Kerem Kusmezer(keremskusmezer@gmail.com) And John Robbins (john@wintellect.com)
+ * Copyright 2008 Kerem Kusmezer(izzetkeremskusmezer@gmail.com) And John Robbins (john@wintellect.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -83,7 +83,7 @@ namespace NetMassDownloader
         static int Main ( string [] args )
         {
             int retValue = 0;
-
+            //System.Diagnostics.Debugger.Break();
             argValues = new DownloaderArgParser ( );
 
             // If there are no arguments, just return now.
@@ -112,6 +112,7 @@ namespace NetMassDownloader
             {
                 retValue = 1;
             }
+            Console.ReadLine();
             return ( retValue );
         }
 
@@ -167,10 +168,6 @@ namespace NetMassDownloader
                             if (! AppSettings.DownloadSourceCode) {
                                 numNotProcessedFiles++;
                                 doTheDownload = false;
-                                //Console.WriteLine (
-                                            //Constants.PdbAlreadyInSymbolServer ,
-                                            //Environment.NewLine ,
-                                            //file );
                             }
                         }
                     }
@@ -232,7 +229,7 @@ namespace NetMassDownloader
                                      so we can always extract this information from the pdb itself directly instead of hardcoding it directly.
                                      TODO Fix Here In The Main Engine Accordingly Kerem Kusmezer To Support Future Versions
                                     */
-
+                                    /*
                                     if (FrameworkVersionData.RelevantVersionData.SPLevel == 0)
                                     {
                                         finalSrcPath +=
@@ -243,7 +240,8 @@ namespace NetMassDownloader
                                         finalSrcPath +=
                                                @"src\source\dotnetfx35SP1_3053\1.1";
                                     }
-
+                                    */
+                                    finalSrcPath += @"src\";
                                 }
                                 extract.DownloadWholeFiles(finalSrcPath);
                                 numProcessFiles++;
@@ -404,7 +402,9 @@ namespace NetMassDownloader
             // running for version 9.0, add the MicrosoftPublicSymbols onto
             // the symbol cache name.
             // BugFix Kerem Kusmezer Check Also The SPLevel So It now works without SP1 also.
-            if ( "9.0" == vsVersion  && FrameworkVersionData.RelevantVersionData.SPLevel > 0)
+            // BugFix Kerem Kusmezer Making It Compitable With 10.0
+            if ( "9.0" == vsVersion  && FrameworkVersionData.RelevantVersionData.SPLevel > 0 
+                 || "10.0" == vsVersion)
             {
                 symbolServer += "MicrosoftPublicSymbols\\";
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Collections.ObjectModel;
 
 
 namespace NetMassDownloader {
@@ -29,7 +30,36 @@ public static class AppSettings {
                 bool.TrueString, StringComparison.OrdinalIgnoreCase );
         }
     }
+    
+    private static ReadOnlyCollection<string> _supportedVSVersions;
+    /// <summary>
+    /// Supported Visual Studio Versions Returned By The Config
+    /// </summary>
+    public static ReadOnlyCollection<string> SupportedVSVersions
+    {
+        get {
 
+            if (_supportedVSVersions == null)
+            {
+                string supportedVersions =
+                    ConfigurationManager.AppSettings["SupportedVersions"];
+                if (!String.IsNullOrEmpty(supportedVersions))
+                {
+                    System.Collections.Generic.List<string> resultList =
+                        new System.Collections.Generic.List<string>();
+                    resultList.AddRange(supportedVersions.Split(';'));
+                    _supportedVSVersions = 
+                        new ReadOnlyCollection<string>(resultList);
+                }
+                else
+                {
+                    _supportedVSVersions = 
+                        new ReadOnlyCollection<string>(new System.Collections.Generic.List<String>());
+                }
+            }
+            return _supportedVSVersions;
+        }
+    }
     ///<summary>
     ///</summary>
     public static bool UseReferenceSourceServer {

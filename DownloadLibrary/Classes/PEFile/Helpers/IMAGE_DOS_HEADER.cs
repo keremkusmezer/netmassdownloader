@@ -4,7 +4,7 @@ using System;
 #endregion
 
 /*------------------------------------------------------------------------------
- * SourceCodeDownloader - Kerem Kusmezer (keremskusmezer@gmail.com)
+ * SourceCodeDownloader - Kerem Kusmezer (izzetkeremskusmezer@gmail.com)
  *                        John Robbins (john@wintellect.com)
  * 
  * Download all the .NET Reference Sources and PDBs to pre-populate your 
@@ -15,7 +15,7 @@ using System;
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
  *     
- * Copyright 2008 Kerem Kusmezer(keremskusmezer@gmail.com)
+ * Copyright 2008 Kerem Kusmezer(izzetkeremskusmezer@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 

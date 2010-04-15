@@ -2,7 +2,7 @@
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
  *     
- * Copyright 2008 Kerem Kusmezer(keremskusmezer@gmail.com)
+ * Copyright 2008 Kerem Kusmezer(izzetkeremskusmezer@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -17,7 +17,7 @@
 */
 #endregion
 ///*------------------------------------------------------------------------------
-// * SourceCodeDownloader - Kerem Kusmezer (keremskusmezer@gmail.com)
+// * SourceCodeDownloader - Kerem Kusmezer (izzetkeremskusmezer@gmail.com)
 // *                        
 // * Download all the .NET Reference Sources and PDBs to pre-populate your 
 // * symbol server! No more waiting as each file downloads individually while
@@ -374,7 +374,7 @@ namespace DownloadLibrary.Classes
         }
 
 
-
+        
         public void ParseBody()
         {
 
@@ -394,6 +394,9 @@ namespace DownloadLibrary.Classes
                     {
                         insideFileParsing = true;
                         currentLine = bodyReader.ReadLine();
+                        m_targetPath +=
+                            m_http_alias.Replace("http://ReferenceSource.microsoft.com/",string.Empty).Replace("/","\\");
+                        m_targetPath = Utility.CleanupPath(m_targetPath);
                     }
                     else if (currentLine == FileListEnd)
                     {

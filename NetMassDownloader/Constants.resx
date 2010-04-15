@@ -178,7 +178,10 @@ FileDownload Result
 Debugger key. The default is to look for Visual Studio 2008. If you specified 
 a version with a -vsver command line option, make sure to specify the 
 complete version. For example, Visual Studio 2005 is 8.0 and Visual Studio 
-2008 is 9.0.</value>
+2008 is 9.0 and Visual Studio 2010 is 10.0</value>
+  </data>
+  <data name="ErrorVSVersion" xml:space="preserve">
+    <value>Only {0} Versions Are Supported As VS Version</value>
   </data>
   <data name="FileDownloadFailedFmt" xml:space="preserve">
     <value>File download failed: {0}</value>
@@ -190,7 +193,7 @@ complete version. For example, Visual Studio 2005 is 8.0 and Visual Studio
     <value>An invalid parameter was passed to the method.</value>
   </data>
   <data name="LogoString" xml:space="preserve">
-    <value>.Net Mass Downloader {0} - (c) 2008 by Kerem Kusmezer, John Robbins
+    <value>.Net Mass Downloader {0} - (c) 2008 to 2010 by Kerem Kusmezer, John Robbins
 </value>
   </data>
   <data name="NoDebugSection" xml:space="preserve">
