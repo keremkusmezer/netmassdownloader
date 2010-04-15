@@ -1,5 +1,5 @@
 /*------------------------------------------------------------------------------
- * SourceCodeDownloader - Kerem Kusmezer (keremskusmezer@gmail.com)
+ * SourceCodeDownloader - Kerem Kusmezer (izzetkeremskusmezer@gmail.com)
  *                        John Robbins (john@wintellect.com)
  * 
  * Download all the .NET Reference Sources and PDBs to pre-populate your 

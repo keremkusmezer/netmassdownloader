@@ -1,6 +1,6 @@
 ﻿#region Detail Information
 /*------------------------------------------------------------------------------
- * SourceCodeDownloader - Kerem Kusmezer (keremskusmezer@gmail.com)
+ * SourceCodeDownloader - Kerem Kusmezer (izzetkeremskusmezer@gmail.com)
  *                        John Robbins (john@wintellect.com)
  * 
  * Download all the .NET Reference Sources and PDBs to pre-populate your 
@@ -13,7 +13,7 @@
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
  *     
- * Copyright 2008 Kerem Kusmezer(keremskusmezer@gmail.com) And John Robbins (john@wintellect.com)
+ * Copyright 2008 Kerem Kusmezer(izzetkeremskusmezer@gmail.com) And John Robbins (john@wintellect.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -195,7 +195,7 @@ namespace NetMassDownloader
         {
             this.Files = new List<String> ( );
             this.Output = String.Empty;
-            this.VsVersion = "9.0" ;
+            //this.VsVersion = "9.0" ;
 
             errorMessage = String.Empty;
         }
@@ -324,22 +324,32 @@ namespace NetMassDownloader
                         Output = AppendTrailingSlashIfNecessary ( switchValue );
                     }
                     break;
-
                 case argVsVer:
                 case argVsVerShort:
-                    if ( false == String.IsNullOrEmpty ( VsVersion ) )
+                    if (!String.IsNullOrEmpty ( VsVersion ) )
                     {
                         errorMessage = Constants.ErrorMultipleVersions;
                         ss = SwitchStatus.Error;
                     }
-                    else if ( true == String.IsNullOrEmpty ( switchValue ) )
+                    else if (String.IsNullOrEmpty ( switchValue ) )
                     {
                         errorMessage = Constants.ErrorEmptyVsVerArg;
                         ss = SwitchStatus.Error;
                     }
                     else
                     {
-                        VsVersion = switchValue;
+                        if (!AppSettings.SupportedVSVersions.Contains(switchValue))
+                        {
+                            string resultValue = string.Empty;
+                            foreach (string sourceString in AppSettings.SupportedVSVersions)
+                            {
+                                resultValue += sourceString + " ";
+                            }
+                             errorMessage = String.Format(Constants.ErrorVSVersion,resultValue);
+                             ss = SwitchStatus.Error;
+                        }
+                        else
+                            VsVersion = switchValue;
                     }
                     break;
 
@@ -376,13 +386,13 @@ namespace NetMassDownloader
                 errorMessage = Constants.ErrorNoFiles;
             }
             // If the -vsver switch was not specified, default to VS 2008.
-            if ( true == String.IsNullOrEmpty ( VsVersion ) )
+            if (true==String.IsNullOrEmpty(VsVersion))
             {
                 VsVersion = "9.0";
             }
             // If the output directory was not set, pull the cache directory
             // out of the Visual Studio registry keys.
-            if ( true == String.IsNullOrEmpty ( Output ) )
+            if (true==String.IsNullOrEmpty(Output))
             {
                 String key = String.Format ( CultureInfo.CurrentCulture ,
                                @"Software\Microsoft\VisualStudio\{0}\Debugger" ,
@@ -397,13 +407,13 @@ namespace NetMassDownloader
                     String cacheDir = (String)vsDbgKey.GetValue (
                                                            "SymbolCacheDir" ,
                                                             String.Empty );
-                    if ( true == String.IsNullOrEmpty ( cacheDir ) )
+                    if (String.IsNullOrEmpty(cacheDir))
                     {
                         errorMessage = Constants.ErrorVSNoCacheDirSet;
                     }
                     else
                     {
-                        if ( false == Directory.Exists ( cacheDir ) )
+                        if (!Directory.Exists(cacheDir))
                         {
                             errorMessage = String.Format (
                                            CultureInfo.CurrentCulture ,

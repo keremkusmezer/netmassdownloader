@@ -2,7 +2,7 @@
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
  *     
- * Copyright 2008 Kerem Kusmezer(keremskusmezer@gmail.com) And John Robbins (john@wintellect.com)
+ * Copyright 2008 Kerem Kusmezer(izzetkeremskusmezer@gmail.com) And John Robbins (john@wintellect.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -22,7 +22,7 @@
 
 #region Comments
 /*------------------------------------------------------------------------------
- * SourceCodeDownloader - Kerem Kusmezer (keremskusmezer@gmail.com)
+ * SourceCodeDownloader - Kerem Kusmezer (izzetkeremskusmezer@gmail.com)
  *                        
  * 
  * Download all the .NET Reference Sources and PDBs to pre-populate your 

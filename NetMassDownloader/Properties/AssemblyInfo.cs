@@ -11,7 +11,7 @@ using System;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KusmezerRobbins")]
 [assembly: AssemblyProduct("NetMassDownloader")]
-[assembly: AssemblyCopyright ( "Copyright © Kerem Kusmezer, John Robbins 2008" )]
+[assembly: AssemblyCopyright ( "Copyright © Kerem Kusmezer, John Robbins 2008 - 2010" )]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant ( false ) ]
@@ -33,5 +33,5 @@ using System;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.5.0.1")]
-[assembly: AssemblyFileVersion("1.5.0.1")]
+[assembly: AssemblyVersion("1.6.0.0")]
+[assembly: AssemblyFileVersion("1.6.0.0")]

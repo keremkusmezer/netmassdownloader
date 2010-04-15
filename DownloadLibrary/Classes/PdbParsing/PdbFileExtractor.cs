@@ -2,7 +2,7 @@
 /*       
  * http://www.codeplex.com/NetMassDownloader To Get The Latest Version
  *     
- * Copyright 2008 Kerem Kusmezer(keremskusmezer@gmail.com)
+ * Copyright 2008 Kerem Kusmezer(izzetkeremskusmezer@gmail.com)
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -253,12 +253,16 @@ namespace DownloadLibrary.Classes
                         directoryName =
                             System.IO.Path.GetDirectoryName(tempEnum.Current.LocalFileTarget);
                     }
-
+                    DirectoryInfo createdDirectory = null;
                     if (!System.IO.Directory.Exists(directoryName))
                     {
-                        Directory.CreateDirectory(directoryName);
+                        createdDirectory =
+                            Directory.CreateDirectory(directoryName);
                     }
-
+                    else
+                    {
+                        createdDirectory = new DirectoryInfo(directoryName);
+                    }
                     //{{HDN==================================================
                     DownloadFileEventArgs args = new DownloadFileEventArgs();
                     args.TargetFilePath = UseSourceFilePath
@@ -275,6 +279,7 @@ namespace DownloadLibrary.Classes
                     bool downloadOk = tempClient.DownloadDataWithProgress(
                         tempEnum.Current.UrlToBeRequested, out downloadedData );
                     if (! downloadOk) {
+                        createdDirectory.Delete(true);
                         continue;
                     }
                     //}}HDN==================================================
@@ -376,8 +381,6 @@ namespace DownloadLibrary.Classes
         {
             // Split the string on the asterisks.
             String[] rawData = srcsrvFile.Split(new Char[] { '*' });
-            //Debug.Assert ( null != rawData , "null != rawData" );
-            //Debug.Assert ( rawData.Length == 4 , "rawData.Length == 4" );
             try
             {
                 if (rawData.Length != 4)
@@ -424,104 +427,6 @@ namespace DownloadLibrary.Classes
             System.IO.File.WriteAllBytes(m_pdbFileName, wholeLines);
             return true;
         }
-
-        /*
-
-        public bool DownloadWholeFiles(string targetPath)
-        {
-            
-            Dictionary<String, String> pdbResults = 
-                this.RetrieveFileRelations(targetPath);
-
-            Dictionary<String, String>.Enumerator tempEnum =
-              pdbResults.GetEnumerator();
-
-            //string rootHeader =               
-            //"depot/DevDiv/releases/whidbey/REDBITS/ndp/clr/src/BCL/System/EventArgs.cs/1/EventArgs.cs";
-
-            int i = 1;
-            while (tempEnum.MoveNext())
-            {
-                string restOfPath = String.Empty;
-                try
-                {
-                    PDBWebClient tempClient = Utility.GetWebClientWithCookie();
-
-                    string directoryName = String.Empty;
-                    try
-                    {
-                        directoryName = System.IO.Path.GetDirectoryName(tempEnum.Current.Key);
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine(ex);
-                        directoryName = tempEnum.Current.Key;
-                        char[] invalidChars = System.IO.Path.GetInvalidPathChars();
-                        for (int ix = 0; ix < invalidChars.Length; ix++)
-                        {
-                            directoryName = directoryName.Replace(invalidChars[ix].ToString(), String.Empty);
-                        }
-                        directoryName = System.IO.Path.GetDirectoryName(tempEnum.Current.Key);
-                    }
-
-                    System.IO.Directory.CreateDirectory(directoryName);
-
-                    string targetFileName =
-                        System.IO.Path.GetFileName(tempEnum.Current.Key);
-
-                    restOfPath = tempEnum.Current.Value;
-
-                    restOfPath = restOfPath.Replace("*", "/") + "/" + targetFileName;
-
-                    restOfPath = Constants.rootHeader + restOfPath;
-
-                    byte[] downloadedData = 
-                        tempClient.DownloadData(restOfPath);
-
-                    EulaRequestEvent eulaEventArg = null;
-
-                    if (tempClient.IsEulaResponse)
-                    {                        
-                     
-                        eulaEventArg = 
-                            new EulaRequestEvent(new EulaContents(tempClient.EulaBody));
-
-                        OnEulaAcceptRequested(eulaEventArg);
-
-                        if (!eulaEventArg.EulaAccepted)
-                        {
-                            throw new EulaNotAcceptedException();
-                        }
-                        else
-                        {
-                            downloadedData =
-                                tempClient.DownloadData(restOfPath +"?" + eulaEventArg.EulaContent.AcceptCmdKey);
-                        }
-
-                    }
-
-                    System.IO.File.WriteAllBytes(targetFileName,
-                                                 downloadedData);
-
-                    OnSourceFileDownloaded(new SourceFileLoadEventArg(tempEnum.Current.Key, restOfPath, i.ToString() + "/" + pdbResults.Count));
-
-                }
-                catch (Exception ex)
-                {
-                    
-                    if (ex is EulaNotAcceptedException)
-                        throw;
-
-                    OnSourceFileDownloaded(new SourceFileLoadEventArg(tempEnum.Current.Key, restOfPath, i.ToString() + "/" + pdbResults.Count, ex));
-
-                }
-                i++;
-            }
-            return true;
-        }
-        
-
-        */
 
         #endregion
 
